@@ -3,13 +3,19 @@
 #ifndef _SINGLECHARACTER_H
 #define _SINGLECHARACTER_H
 
-class SingleCharacter {
+#include "Character.h"
+
+class SingleCharacter:public Character {
 public :
 	SingleCharacter();
 	SingleCharacter(char value);
-	~SingleCharacter();
+	virtual ~SingleCharacter();
 	SingleCharacter(const SingleCharacter& source);
 	SingleCharacter& operator=(const SingleCharacter& source);
+	bool IsEqual(const SingleCharacter& source);
+	bool IsNotEqual(const SingleCharacter& source);
+	bool operator==(const SingleCharacter& source);
+	bool operator!=(const SingleCharacter& source);
 	char GetValue() const;
 private:
 	char value;

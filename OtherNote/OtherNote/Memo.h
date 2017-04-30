@@ -4,22 +4,25 @@
 #ifndef _MEMO_H
 #define _MEMO_H
 
-#include "SingleCharacter.h"
 #include "Array.h"
+#include <string>
+using namespace std;
 
 typedef signed long int Long;
+
+class Character;
 
 class Memo {
 public:
 	Memo(Long capacity = 100);
 	~Memo();
 	Long Write(char value);
-	//Long Write();
-	SingleCharacter& GetAt(Long index);
+	Long Write(string value);
+	Character* GetAt(Long index);
 	Long GetCapacity() const;
 	Long GetLength() const;
 private:
-	Array<SingleCharacter> singleCharacters;
+	Array<Character*> characters;
 	Long capacity;
 	Long length;
 };

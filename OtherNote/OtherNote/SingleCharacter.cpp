@@ -20,5 +20,38 @@ SingleCharacter::SingleCharacter(const SingleCharacter& source) {
 
 SingleCharacter& SingleCharacter::operator=(const SingleCharacter& source) {
 	this->value = source.value;
+
 	return *this;
+}
+
+bool SingleCharacter::IsEqual(const SingleCharacter& source) {
+	bool ret = false;
+	if (this->value == source.value) {
+		ret = true;
+	}
+	return ret;
+}
+
+bool SingleCharacter::IsNotEqual(const SingleCharacter& source) {
+	bool ret = false;
+	if (this->value != source.value) {
+		ret = true;
+	}
+	return ret;
+}
+
+bool SingleCharacter::operator==(const SingleCharacter& source) {
+	bool ret = false;
+	if (this->value == source.value) {
+		ret = true;
+	}
+	return ret;
+}
+
+bool SingleCharacter::operator!=(const SingleCharacter& source) {
+	bool ret = false;
+	if (this->value != source.value) {
+		ret = true;
+	}
+	return ret;
 }
