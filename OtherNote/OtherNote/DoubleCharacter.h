@@ -11,7 +11,7 @@ using namespace std;
 class DoubleCharacter :public Character {
 public:
 	DoubleCharacter();
-	DoubleCharacter(string value);
+	DoubleCharacter(char* value);
 	virtual ~DoubleCharacter();
 	DoubleCharacter(const DoubleCharacter& source);
 	DoubleCharacter& operator=(const DoubleCharacter& source);
@@ -19,13 +19,13 @@ public:
 	bool IsNotEqual(const DoubleCharacter& source);
 	bool operator==(const DoubleCharacter& source);
 	bool operator!=(const DoubleCharacter& source);
-	string& GetValue() const;
+	char* GetValue() const;
 private:
-	string value;
+	char value[2];
 };
 
-inline string& DoubleCharacter::GetValue() const {
-	return const_cast<string&>(this->value);
+inline char* DoubleCharacter::GetValue() const {
+	return const_cast<char*>(this->value);
 }
 
 #endif	//_DOUBLECHARACTER_H

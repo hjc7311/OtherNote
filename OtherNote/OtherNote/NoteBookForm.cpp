@@ -12,7 +12,7 @@ BEGIN_MESSAGE_MAP(NoteBookForm, CFrameWnd)
 	ON_WM_PAINT()
 	ON_WM_CLOSE()
 	ON_WM_CHAR()
-	ON_MESSAGE(WM_IME_COMPOSITION, OnTest2)
+	ON_MESSAGE(WM_IME_COMPOSITION, OnImeComposition)
 END_MESSAGE_MAP()
 
 NoteBookForm::NoteBookForm() {}
@@ -24,6 +24,8 @@ BOOL NoteBookForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	//this->memo->Write("¤¿");
 	//this->memo->Write("´Ù");
 	//this->memo->Write('a');
+	/*wchar_t temp = '°¡';
+	this->memo->Write(temp);*/
 
 	return FALSE;
 }
@@ -40,14 +42,19 @@ void NoteBookForm::OnPaint() {
 
 		if (dynamic_cast<SingleCharacter*>(characterLink)) {
 			characters += (dynamic_cast<SingleCharacter*>(characterLink))->GetValue();
+			//dc.TextOut(0, 0, characters);
 		}
 		else if (dynamic_cast<DoubleCharacter*>(characterLink)) {
-			characters += (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue().c_str();
+			characters += ((dynamic_cast<DoubleCharacter*>(characterLink))->GetValue())[0];
+			characters += ((dynamic_cast<DoubleCharacter*>(characterLink))->GetValue())[1];
+			//dc.TextOut(0, 0, CString((dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()));
+			//dc.TextOut(0, 1, CString((dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()));
 		}
 		i++;
 	}
-	
 	dc.TextOut(0, 0, characters);
+	
+	/*dc.TextOut(0, 0, characters);*/
 }
 
 void NoteBookForm::OnClose() {
@@ -56,16 +63,30 @@ void NoteBookForm::OnClose() {
 }
 
 void NoteBookForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
-	this->memo->Write(nChar);
-	this->RedrawWindow();
+	//if (nChar >= 'A' && nChar <= 'z') {
+		this->memo->Write(nChar);
+		this->RedrawWindow();
+	//}
 }
 
-LRESULT NoteBookForm::OnTest2(WPARAM wParam, LPARAM lParam) {
+LRESULT NoteBookForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 
-	this->WindowProc(WM_IME_CHAR, wParam, 0);
+	//this->WindowProc(WM_IME_CHAR, wParam, 0);
+	//this->memo->Erase(this->memo->GetLength());
+
+	char *composition = new char[2];
+	composition[0] = *(((char*)&wParam)+1);
+	composition[1] = *((char*)&wParam);
 	
+
+	this->memo->Write(composition);
+	//if (lParam == GCS_RESULTSTR) {
+
+	//}
+	this->RedrawWindow();
+
 	return 0;
 }
 

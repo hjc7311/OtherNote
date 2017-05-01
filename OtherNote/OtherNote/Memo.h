@@ -17,8 +17,10 @@ public:
 	Memo(Long capacity = 100);
 	~Memo();
 	Long Write(char value);
-	Long Write(string value);
+	Long Write(char* value);
 	Character* GetAt(Long index);
+	Long Erase(Long index);
+
 	Long GetCapacity() const;
 	Long GetLength() const;
 private:

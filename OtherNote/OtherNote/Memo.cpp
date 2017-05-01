@@ -31,7 +31,7 @@ Long Memo::Write(char value) {
 	return index;
 }
 
-Long Memo::Write(string value) {
+Long Memo::Write(char* value) {
 	Long index = this->length;
 
 	DoubleCharacter *doubleCharacter = new DoubleCharacter(value);
@@ -46,10 +46,36 @@ Long Memo::Write(string value) {
 Character* Memo::GetAt(Long index) {
 	return this->characters.GetAt(index);
 }
+
+//2017/05/01 New
+Long Memo::Erase(Long index) {
+	if (this->characters.GetAt(index) != 0) {
+		delete this->characters.GetAt(index);
+		index = this->characters.Delete(index);
+	}
+	this->capacity--;
+	this->length--;
+
+	return index;
+}
+
+//Long Memo::Write(wchar_t value) {
+//	Long index = this->length;
+//
+//	DoubleCharacter *doubleCharacter = new DoubleCharacter();
+//
+//	if (this->length < this->capacity) {
+//		this->characters.Store(index, doubleCharacter);
+//		this->length++;
+//	}
+//	return index;
+//}
+
+
+
 //
 //#include <iostream>
 //using namespace std;
-
 //int main(int argc, char argv[]) {
 //	Memo memo(10);
 //	char cha
