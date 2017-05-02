@@ -19,7 +19,10 @@ protected:
 	afx_msg void OnClose();
 	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg LRESULT OnImeComposition(WPARAM wParam, LPARAM lParam);
-	
+	//afx_msg LRESULT OnImeChar(WPARAM wParam, LPARAM lParam);
+	//afx_msg LRESULT OnImeStartComposition(WPARAM wParam, LPARAM lParam);
+	//afx_msg LRESULT OnImeEndComposition(WPARAM wParam, LPARAM lParam);
+
 	DECLARE_MESSAGE_MAP()
 
 };

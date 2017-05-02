@@ -6,6 +6,7 @@
 #include <iostream>
 
 Memo::Memo(Long capacity)
+	:characters(capacity)
 {
 	this->capacity = capacity;
 	this->length = 0;
@@ -25,21 +26,31 @@ Long Memo::Write(char value) {
 	SingleCharacter *singleCharacter = new SingleCharacter(value);
 
 	if (this->length < this->capacity) {
-		this->characters.Store(index, singleCharacter);
-		this->length++;
+		index=this->characters.Store(index, singleCharacter);
 	}
+	else {
+		index=this->characters.AppendFromRear(singleCharacter);
+		this->capacity++;
+	}
+	this->length++;
+
 	return index;
 }
 
 Long Memo::Write(char* value) {
 	Long index = this->length;
-
+	
 	DoubleCharacter *doubleCharacter = new DoubleCharacter(value);
 
 	if (this->length < this->capacity) {
-		this->characters.Store(index, doubleCharacter);
-		this->length++;
+		index = this->characters.Store(index, doubleCharacter);
 	}
+	else {
+		index = this->characters.AppendFromRear(doubleCharacter);
+		this->capacity++;
+	}
+	this->length++;
+
 	return index;
 }
 
@@ -49,13 +60,17 @@ Character* Memo::GetAt(Long index) {
 
 //2017/05/01 New
 Long Memo::Erase(Long index) {
-	if (this->characters.GetAt(index) != 0) {
-		delete this->characters.GetAt(index);
+	Character *characterLink(this->characters.GetAt(index));
+	if (index >= 0) {
+		if (characterLink != 0) {
+			delete characterLink;
+			characterLink = 0;
+		}
 		index = this->characters.Delete(index);
+		this->capacity--;
+		this->length--;
+	
 	}
-	this->capacity--;
-	this->length--;
-
 	return index;
 }
 
@@ -77,19 +92,16 @@ Long Memo::Erase(Long index) {
 //#include <iostream>
 //using namespace std;
 //int main(int argc, char argv[]) {
-//	Memo memo(10);
-//	char cha
-//	cout << character << endl;
+//	Memo memo(100);
 //	
-//	//Long index = memo.Write(50000);
+//	Long index = memo.Write('°¡');
 //
-//	//Character* characterLink = memo.GetAt(index);
-//	//if (dynamic_cast<SingleCharacter*>(characterLink)) {
-//	//	cout << (dynamic_cast<SingleCharacter*>(characterLink))->GetValue() << endl;
-//	//}
-//	//else if (dynamic_cast<DoubleCharacter*>(characterLink)) {
-//	//	cout << (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue() << endl;
-//	//}
-//
+//	Character* characterLink = memo.GetAt(index);
+//	if (dynamic_cast<SingleCharacter*>(characterLink)) {
+//		cout << (dynamic_cast<SingleCharacter*>(characterLink))->GetValue() << endl;
+//	}
+//	else if (dynamic_cast<DoubleCharacter*>(characterLink)) {
+//		cout << (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue() << endl;
+//	}
 //	return 0;
 //}

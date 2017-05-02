@@ -12,27 +12,25 @@ BEGIN_MESSAGE_MAP(NoteBookForm, CFrameWnd)
 	ON_WM_PAINT()
 	ON_WM_CLOSE()
 	ON_WM_CHAR()
+	//ON_MESSAGE(WM_IME_STARTCOMPOSITION, OnImeStartComposition)
 	ON_MESSAGE(WM_IME_COMPOSITION, OnImeComposition)
+	//ON_MESSAGE(WM_IME_ENDCOMPOSITION, OnImeEndComposition)
+	//ON_MESSAGE(WM_IME_CHAR, OnImeChar)
 END_MESSAGE_MAP()
 
-NoteBookForm::NoteBookForm() {}
+NoteBookForm::NoteBookForm() {
+
+}
 
 BOOL NoteBookForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	CFrameWnd::OnCreate(lpCreateStruct);
-	this->memo = new Memo(100);
-	//this->memo->Write("¤§");
-	//this->memo->Write("¤¿");
-	//this->memo->Write("´Ù");
-	//this->memo->Write('a');
-	/*wchar_t temp = '°¡';
-	this->memo->Write(temp);*/
-
+	this->memo = new Memo(1000);
+	
 	return FALSE;
 }
 
 void NoteBookForm::OnPaint() {
-	CPaintDC dc(this);
-	
+	CPaintDC dc(this);	
 	CString characters;
 	
 	Long i = 0;
@@ -42,19 +40,14 @@ void NoteBookForm::OnPaint() {
 
 		if (dynamic_cast<SingleCharacter*>(characterLink)) {
 			characters += (dynamic_cast<SingleCharacter*>(characterLink))->GetValue();
-			//dc.TextOut(0, 0, characters);
 		}
 		else if (dynamic_cast<DoubleCharacter*>(characterLink)) {
-			characters += ((dynamic_cast<DoubleCharacter*>(characterLink))->GetValue())[0];
-			characters += ((dynamic_cast<DoubleCharacter*>(characterLink))->GetValue())[1];
-			//dc.TextOut(0, 0, CString((dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()));
-			//dc.TextOut(0, 1, CString((dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()));
+			characters += (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()[0];
+			characters += (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()[1];
 		}
 		i++;
 	}
-	dc.TextOut(0, 0, characters);
-	
-	/*dc.TextOut(0, 0, characters);*/
+	dc.TextOut(0, 0, characters);	
 }
 
 void NoteBookForm::OnClose() {
@@ -63,34 +56,78 @@ void NoteBookForm::OnClose() {
 }
 
 void NoteBookForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
-	//if (nChar >= 'A' && nChar <= 'z') {
-		this->memo->Write(nChar);
-		this->RedrawWindow();
-	//}
+	Character *temp = 0;
+	if (this->memo->GetLength() != 0) {
+		temp = this->memo->GetAt(this->memo->GetLength() - 1);
+	}
+	
+	if (dynamic_cast<DoubleCharacter*>(temp)) {
+		this->memo->Erase(this->memo->GetLength() - 1);
+	}
+	this->memo->Write(nChar);
+	
+	this->RedrawWindow();	
 }
 
 LRESULT NoteBookForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 
-	//this->WindowProc(WM_IME_CHAR, wParam, 0);
-	//this->memo->Erase(this->memo->GetLength());
-
-	char *composition = new char[2];
-	composition[0] = *(((char*)&wParam)+1);
-	composition[1] = *((char*)&wParam);
-	
-
-	this->memo->Write(composition);
-	//if (lParam == GCS_RESULTSTR) {
-
-	//}
-	this->RedrawWindow();
-
+	char composition[2];
+	Character *temp = 0;
+	if (this->memo->GetLength() != 0) {
+		temp = this->memo->GetAt(this->memo->GetLength() - 1);
+	}	
+		
+	if (lParam & GCS_COMPSTR) {
+		if (dynamic_cast<DoubleCharacter*>(temp)) {
+			this->memo->Erase(this->memo->GetLength() - 1);
+		}		
+		composition[0] = *(((char*)&wParam) + 1);
+		composition[1] = *((char*)&wParam);
+		this->memo->Write(composition);
+	}
+	else if (lParam & GCS_RESULTSTR) {
+		this->memo->Erase(this->memo->GetLength() - 1);
+		composition[0] = *(((char*)&wParam) + 1);
+		composition[1] = *((char*)&wParam);
+		this->memo->Write(composition);
+		this->memo->Write(composition);
+	}
+	if (lParam & GCS_COMPSTR) {
+		this->RedrawWindow();
+	}
 	return 0;
 }
 
+//LRESULT NoteBookForm::OnImeStartComposition(WPARAM wParam, LPARAM lParam) {
+//	this->memo->characters.length++;
+//	this->memo->length++;
+//	return 0;
+//}
 //
+//LRESULT NoteBookForm::OnImeEndComposition(WPARAM wParam, LPARAM lParam) {
+//	this->memo->Erase(this->memo->GetLength() - 1);
+//	return 0;
+//}
+
+
+//LRESULT NoteBookForm::OnImeChar(WPARAM wParam, LPARAM lParam) {
+//	char composition[2];
+//
+//	this->memo->Erase(this->memo->GetLength() - 1);
+//	composition[0] = *(((char*)&wParam) + 1);
+//	composition[1] = *((char*)&wParam);
+//	this->memo->Write(composition);
+//
+//	this->memo->characters.length++;
+//	this->memo->length++;
+//
+//	this->RedrawWindow();
+//
+//	return 0;
+//}
+
 //void NoteBookForm::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 //
 //	if (nChar == 13) {
@@ -117,4 +154,3 @@ LRESULT NoteBookForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
 //
 //	//dc.TextOut(0, 0, name);
 //}
-
