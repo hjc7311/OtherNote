@@ -14,8 +14,6 @@ BEGIN_MESSAGE_MAP(NoteBookForm, CFrameWnd)
 	ON_WM_CHAR()
 	ON_MESSAGE(WM_IME_STARTCOMPOSITION, OnImeStartComposition)
 	ON_MESSAGE(WM_IME_COMPOSITION, OnImeComposition)
-	//ON_MESSAGE(WM_IME_ENDCOMPOSITION, OnImeEndComposition)
-	//ON_MESSAGE(WM_IME_CHAR, OnImeChar)
 END_MESSAGE_MAP()
 
 NoteBookForm::NoteBookForm() {
@@ -24,7 +22,7 @@ NoteBookForm::NoteBookForm() {
 
 BOOL NoteBookForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	CFrameWnd::OnCreate(lpCreateStruct);
-	this->memo = new Memo(10000);
+	this->memo = new Memo(100);
 	
 	return FALSE;
 }
@@ -56,16 +54,9 @@ void NoteBookForm::OnClose() {
 }
 
 void NoteBookForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
-	//Character *temp = 0;
-	//if (this->memo->GetLength() != 0) {
-	//	temp = this->memo->GetAt(this->memo->GetLength() - 1);
-	//}
-	//
-	//if (dynamic_cast<DoubleCharacter*>(temp)) {
-	//	this->memo->Erase(this->memo->GetLength() - 1);
-	//}
 	this->endComposition = false;
 
+	//Enter key ¸ÊÇÎ
 	if (nChar == 13) {
 		this->memo->Erase();
 	}
@@ -94,7 +85,6 @@ LRESULT NoteBookForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
 		lineLink = &this->memo->GetAt(row);
 		characterLink = lineLink->GetAt(column - 1);
 
-		//if (dynamic_cast<DoubleCharacter*>(characterLink) && this->endComposition==false) {
 		if (this->endComposition == false) {
 
 			this->memo->Erase();
@@ -104,40 +94,12 @@ LRESULT NoteBookForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
 
 	}
 	if (lParam & GCS_RESULTSTR) {
-		//if (this->endComposition == false) {
-			this->endComposition = true;
-		//}
+		this->endComposition = true;
 		this->memo->Erase();
 		this->memo->Write(composition);
-		//this->memo->SetColumn(this->memo->GetColumn() + 1);
 	}
 	this->RedrawWindow();
 	
-	//
-	//
-	//Character *temp = 0;
-	//if (this->memo->GetLength() != 0) {
-	//	temp = this->memo->GetAt(this->memo->GetLength() - 1);
-	//}	
-	//	
-	//if (lParam & GCS_COMPSTR) {
-	//	if (dynamic_cast<DoubleCharacter*>(temp)) {
-	//		//this->memo->Erase(this->memo->GetLength() - 1);
-	//	}		
-	//	composition[0] = *(((char*)&wParam) + 1);
-	//	composition[1] = *((char*)&wParam);
-	//	this->memo->Write(composition);
-	//}
-	//else if (lParam & GCS_RESULTSTR) {
-	//	//this->memo->Erase(this->memo->GetLength() - 1);
-	//	composition[0] = *(((char*)&wParam) + 1);
-	//	composition[1] = *((char*)&wParam);
-	//	this->memo->Write(composition);
-	//	this->memo->Write(composition);
-	//}
-	//if (lParam & GCS_COMPSTR) {
-	//	this->RedrawWindow();
-	//}
 	return 0;
 }
 

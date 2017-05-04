@@ -23,7 +23,7 @@ public:
 	Long GetLength() const;
 	Long GetRow() const;
 	Long GetColumn() const;
-	void SetColumn(Long column);
+
 private:
 	Array<Line> lines;
 	Long capacity;
@@ -47,7 +47,4 @@ inline Long Memo::GetColumn() const {
 	return this->column;
 }
 
-inline void Memo::SetColumn(Long column) {
-	this->column = column;
-}
 #endif	//_MEMO_H
