@@ -54,13 +54,12 @@ Long Memo::Erase() {
 	else if (lineLink->GetLength() == 1) {
 		this->column--;
 		index = lineLink->Erase(this->column);
-		if (this->length >= 2) {
+		if (this->length >= 2) {//라인의 개수는 무조건 1개 이상을 가져야 한다가 기본이다.
 			this->lines.Delete(this->row);
 			this->row--;
 			this->column = this->lines.GetAt(this->row).GetLength();
 		}
 	}
-
 	return index;
 }
 
