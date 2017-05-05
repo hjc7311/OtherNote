@@ -34,5 +34,6 @@ Debug/
 **/Debug/
 **/*.vcxproj
 **/*.filters
+**/*.user
 *.sln
 
