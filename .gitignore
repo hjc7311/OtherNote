@@ -31,5 +31,6 @@
 # OtherNote
 Debug/
 .vs/
-*.vcxproj
-*.filters
+**/*.vcxproj
+**/*.filters
+**/Debug/
