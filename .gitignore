@@ -30,7 +30,9 @@
 
 # OtherNote
 Debug/
-.vs/
+**/.vs/
+**/Debug/
 **/*.vcxproj
 **/*.filters
-**/Debug/
+*.sln
+
