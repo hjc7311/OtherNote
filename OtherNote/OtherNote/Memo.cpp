@@ -1,66 +1,54 @@
 //Memo.cpp
-//test
 
 #include "Memo.h"
-#include "SingleCharacter.h"
-#include "DoubleCharacter.h"
-#include <iostream>
+#include "Line.h"
+#include "Visitor.h"
 
 Memo::Memo(Long capacity)
-	:lines(capacity) {
-	this->capacity = capacity;
-	this->length = 0;
+	:Composite(capacity)
+{
 	this->row = 0;
-	this->column = 0;
 }
 
 Memo::Memo(const Memo& source)
-	:lines(source.lines)
+	:Composite(source)
 {
-	this->capacity = source.capacity;
-	this->length = source.length;
 	this->row = source.row;
-	this->column = source.column;
 }
 
 Memo::~Memo() {
+	//Composite::~Composite();
 }
 
-void Memo::Write(char value) {
-	Line *line = &this->lines.GetAt(this->row);
-	this->column = line->Write(value, this->column);
-	this->column++;
+Memo& Memo::operator=(const Memo& source) {
+	Composite::operator=(source);
+	this->row = source.row;
+	return *this;
 }
 
-void Memo::Write(char* value) {
-	Line *lineLink = &this->lines.GetAt(this->row);
-	this->column = lineLink->Write(value, this->column);
-	this->column++;
+Contents* Memo::Clone() {
+	return new Memo(*this);
 }
 
-Line& Memo::GetAt(Long row) {
-	return this->lines.GetAt(row);
+Long Memo::AddLine(Contents *contentsLink) {
+	this->row = Composite::Add(contentsLink);
+	return this->row;
 }
 
-//2017/05/01 New
-Long Memo::Erase() {
-	Long index = 0;
-	
-	Line *lineLink = &this->lines.GetAt(this->row);
-
-	if (lineLink->GetLength() >= 2) {
-		this->column--;
-		index = lineLink->Erase(this->column);
-	}
-	else if (lineLink->GetLength() == 1) {
-		this->column--;
-		index = lineLink->Erase(this->column);
-		if (this->length >= 2) {//라인의 개수는 무조건 1개 이상을 가져야 한다가 기본이다.
-			this->lines.Delete(this->row);
-			this->row--;
-			this->column = this->lines.GetAt(this->row).GetLength();
-		}
-	}
+Long Memo::RemoveLine(Long index) {
+	index= Composite::Remove(index);
+	this->row--;
 	return index;
 }
 
+Line* Memo::GetLine(Long index) {
+	return static_cast<Line*>(Composite::GetAt(index));
+}
+
+Line* Memo::operator[](Long index) {
+	return static_cast<Line*>(Composite::GetAt(index));
+}
+
+void Memo::Accept(Visitor* visitor) {
+	visitor->Visit(this);
+}

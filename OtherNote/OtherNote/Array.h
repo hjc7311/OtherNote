@@ -1,8 +1,5 @@
 #pragma once
 //Array.h
-/*
-20170504 : GetAt, operator = 를 const로 변경 (사유 : Line 복사생성자 매개변수에 const 변수를 추가하려고 변경함)
-*/
 
 //Guard 선언
 #ifndef _ARRAY_H
@@ -34,9 +31,9 @@ public:
 	void BubbleSort(int(*compare)(void *, void *));
 	void InsertionSort(int(*compare)(void *, void *));
 	void MergeSort(const Array& one, const Array& other, int(*compare)(void *, void *));
-	T& GetAt(Long index) const;
+	T& GetAt(Long index);
 	Array& operator=(const Array& source);
-	T& operator[](Long index) const;
+	T& operator[](Long index);
 	T* operator+(Long index);
 	Long GetCapacity() const;
 	Long GetLength() const;
@@ -572,13 +569,13 @@ void Array<T>::MergeSort(const Array& one, const Array& other, int(*compare)(voi
 }
 
 template <typename T>
-T& Array<T>::GetAt(Long index) const {
-	return const_cast<T&>(this->front[index]);
+T& Array<T>::GetAt(Long index) {
+	return this->front[index];
 }
 
 template <typename T>
-T& Array<T>::operator[](Long index) const {
-	return const_cast<T&>(this->front[index]);
+T& Array<T>::operator[](Long index) {
+	return this->front[index];
 }
 
 template <typename T>

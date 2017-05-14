@@ -14,6 +14,10 @@ SingleCharacter::~SingleCharacter() {
 
 }
 
+Contents* SingleCharacter::Clone() {
+	return new SingleCharacter(*this);
+}
+
 SingleCharacter::SingleCharacter(const SingleCharacter& source) {
 	this->value = source.value;
 }
@@ -24,33 +28,33 @@ SingleCharacter& SingleCharacter::operator=(const SingleCharacter& source) {
 	return *this;
 }
 
-bool SingleCharacter::IsEqual(const SingleCharacter& source) {
+bool SingleCharacter::IsEqual(const SingleCharacter& other) {
 	bool ret = false;
-	if (this->value == source.value) {
+	if (this->value == other.value) {
 		ret = true;
 	}
 	return ret;
 }
 
-bool SingleCharacter::IsNotEqual(const SingleCharacter& source) {
+bool SingleCharacter::IsNotEqual(const SingleCharacter& other) {
 	bool ret = false;
-	if (this->value != source.value) {
+	if (this->value != other.value) {
 		ret = true;
 	}
 	return ret;
 }
 
-bool SingleCharacter::operator==(const SingleCharacter& source) {
+bool SingleCharacter::operator==(const SingleCharacter& other) {
 	bool ret = false;
-	if (this->value == source.value) {
+	if (this->value == other.value) {
 		ret = true;
 	}
 	return ret;
 }
 
-bool SingleCharacter::operator!=(const SingleCharacter& source) {
+bool SingleCharacter::operator!=(const SingleCharacter& other) {
 	bool ret = false;
-	if (this->value != source.value) {
+	if (this->value != other.value) {
 		ret = true;
 	}
 	return ret;

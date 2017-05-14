@@ -3,7 +3,7 @@
 #define _NOTEBOOKAPP_H
 #include <afxwin.h>
 
-class NoteBookApp :public CWinApp {
+class NoteBookApp : public CWinApp {
 public:
 	virtual BOOL InitInstance();
 };

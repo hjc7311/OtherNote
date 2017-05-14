@@ -18,6 +18,10 @@ DoubleCharacter::~DoubleCharacter() {
 
 }
 
+Contents* DoubleCharacter::Clone() {
+	return new DoubleCharacter(*this);
+}
+
 DoubleCharacter::DoubleCharacter(const DoubleCharacter& source)
 {
 	this->value[0] = source.value[0];
@@ -29,4 +33,12 @@ DoubleCharacter& DoubleCharacter::operator=(const DoubleCharacter& source) {
 	this->value[1] = source.value[1];
 
 	return *this;
+}
+
+bool DoubleCharacter::IsEqual(const DoubleCharacter& other) {
+	bool ret = false;
+	if (this->value[0] == other.value[0] && this->value[1] == other.value[1]) {
+		ret = true;
+	}
+	return ret;
 }

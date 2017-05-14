@@ -4,12 +4,14 @@
 #ifndef _CHARACTER_H
 #define _CHARACTER_H
 
-class Character {
+#include "Contents.h"
+
+class Character :public Contents {
 public:
 	Character();
-	virtual ~Character()=0;
-	Character(const Character& source);
-	Character& operator=(const Character& source);
+	virtual ~Character() = 0;
 };
+
+
 
 #endif	//_CHARACTER_H

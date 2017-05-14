@@ -4,47 +4,29 @@
 #ifndef _MEMO_H
 #define _MEMO_H
 
-#include "Array.h"
-#include "Line.h"
+#include "Composite.h"
 
-typedef signed long int Long;
-
-class Memo {
+class Visitor;
+class Line;
+class Memo :public Composite {
 public:
-	Memo(Long capacity = 100);
+	Memo(Long capacity = 250);
 	Memo(const Memo& source);
-	~Memo();
-	void Write(char value);
-	void Write(char* value);
-	Line& GetAt(Long row);
-	Long Erase();
-
-	Long GetCapacity() const;
-	Long GetLength() const;
+	virtual ~Memo();
+	virtual Contents* Clone();
+	Memo& operator=(const Memo& source);
+	Long AddLine(Contents *contentsLink);
+	Long RemoveLine(Long index);
+	Line* GetLine(Long index);
+	Line* operator[](Long index);
 	Long GetRow() const;
-	Long GetColumn() const;
-
-private:
-	Array<Line> lines;
-	Long capacity;
-	Long length;
+	void Memo::Accept(Visitor* visitor);
+public:
 	Long row;
-	Long column;
 };
 
-inline Long Memo::GetCapacity() const {
-	return this->capacity;
-}
-
-inline Long Memo::GetLength() const {
-	return this->length;
-}
 inline Long Memo::GetRow() const {
 	return this->row;
-}
-
-inline Long Memo::GetColumn() const {
-	return this->column;
 }
 
 #endif	//_MEMO_H

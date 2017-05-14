@@ -5,14 +5,13 @@
 #define _DOUBLECHARACTER_H
 
 #include "Character.h"
-#include <string>
-using namespace std;
 
 class DoubleCharacter :public Character {
 public:
 	DoubleCharacter();
 	DoubleCharacter(char* value);
 	virtual ~DoubleCharacter();
+	virtual Contents* Clone();
 	DoubleCharacter(const DoubleCharacter& source);
 	DoubleCharacter& operator=(const DoubleCharacter& source);
 	bool IsEqual(const DoubleCharacter& source);

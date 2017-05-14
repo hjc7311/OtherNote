@@ -4,37 +4,34 @@
 #ifndef _LINE_H
 #define _LINE_H
 
-#include "Array.h"
+#include "Composite.h"
 
-typedef signed long int Long;
+#include <string>
+using namespace std;
 
+class Visitor;
 class Character;
-
-class Line {
+class Line : public Composite {
 public:
-	Line(Long capacity = 100);
-	~Line();
-	Long Write(char value, Long column);
-	Long Write(char* value, Long column);
-	Character* GetAt(Long index);
-	Long Erase(Long index);
+	Line(Long capacity = 256);
 	Line(const Line& source);
+	virtual ~Line();
+	virtual Contents* Clone();
 	Line& operator=(const Line& source);
-
-	Long GetCapacity() const;
-	Long GetLength() const;
-private:
-	Array<Character*> characters;
-	Long capacity;
-	Long length;
+	Long Write(char value);
+	Long Write(char *value);
+	Long Erase();
+	Character* GetCharacter(Long index);
+	Character* operator[](Long index);
+	Long GetColumn() const;
+	string GetLineString();
+	void Accept(Visitor* visitor);
+public:
+	Long column;
 };
 
-inline Long Line::GetCapacity() const {
-	return this->capacity;
-}
-
-inline Long Line::GetLength() const {
-	return this->length;
+inline Long Line::GetColumn() const {
+	return this->column;
 }
 
 #endif	//_LINE_H

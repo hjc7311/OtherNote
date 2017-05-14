@@ -10,12 +10,13 @@ public :
 	SingleCharacter();
 	SingleCharacter(char value);
 	virtual ~SingleCharacter();
+	virtual Contents* Clone();
 	SingleCharacter(const SingleCharacter& source);
 	SingleCharacter& operator=(const SingleCharacter& source);
-	bool IsEqual(const SingleCharacter& source);
-	bool IsNotEqual(const SingleCharacter& source);
-	bool operator==(const SingleCharacter& source);
-	bool operator!=(const SingleCharacter& source);
+	bool IsEqual(const SingleCharacter& other);
+	bool IsNotEqual(const SingleCharacter& other);
+	bool operator==(const SingleCharacter& other);
+	bool operator!=(const SingleCharacter& other);
 	char GetValue() const;
 private:
 	char value;
