@@ -21,9 +21,7 @@ NoteBookForm::NoteBookForm() {
 BOOL NoteBookForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	CFrameWnd::OnCreate(lpCreateStruct);
 	this->memo = new Memo;
-	this->memo->AddLine(new Line);
 	this->endComposition = true;
-
 	return FALSE;
 }
 #include "PaintVisitor.h"
@@ -39,12 +37,6 @@ void NoteBookForm::OnPaint() {
 */
 	PaintVisitor paintVisitor(&dc);
 
-	CString characters;
-	Long i = 0;
-	Long j;
-	Line *lineLink;
-	Character *characterLink;
-	
 	this->memo->Accept(&paintVisitor);
 	
 	/*Long i = 0;

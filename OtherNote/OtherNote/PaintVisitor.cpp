@@ -1,8 +1,10 @@
 //PaintVisitor.cpp
 
 #include "PaintVisitor.h"
+#include "MakeStringVisitor.h"
 #include "Line.h"
 #include <afxWin.h>
+#include <iostream>
 
 PaintVisitor::PaintVisitor()
 	:Visitor() {
@@ -55,9 +57,11 @@ void PaintVisitor::Visit(Line *line) {
 #include "Memo.h"
 
 void PaintVisitor::Visit(Memo *memo) {
-	Long i = 0;
-	while (i < memo->GetLength()) {
-		memo->GetLine(i)->Accept(this);
-		i++;
-	}
+	MakeStringVisitor contentsString;
+	memo->Accept(&contentsString);
+	RECT rect{ 0, 0, 1000, 1000 };
+	CFont font;
+	font.CreatePointFont(200, "Tahoma");
+	dc->SelectObject(&font);
+	this->dc->DrawText(contentsString.GetStr().c_str(), &rect, DT_EDITCONTROL | DT_WORDBREAK | DT_LEFT | DT_EXPANDTABS);
 }

@@ -20,7 +20,7 @@ public:
 	Line* GetLine(Long index);
 	Line* operator[](Long index);
 	Long GetRow() const;
-	void Memo::Accept(Visitor* visitor);
+	void Accept(Visitor* visitor);
 public:
 	Long row;
 };

@@ -7,6 +7,7 @@
 Memo::Memo(Long capacity)
 	:Composite(capacity)
 {
+	this->AddLine(new Line);
 	this->row = 0;
 }
 
