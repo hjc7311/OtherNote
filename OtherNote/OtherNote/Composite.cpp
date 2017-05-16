@@ -76,3 +76,14 @@ Long Composite::Remove(Long index) {
 	this->length--;
 	return index;
 }
+
+ArrayIterator<Contents*>* Composite::CreateIterator() const {
+	
+	//return const_cast<ArrayIterator<Contents*>*>(new ArrayIterator<Contents*>(const_cast<ArrayIterator<Contents*>>(&this->contents)));
+	
+	//ArrayIterator<Item>::ArrayIterator(Array<Item> *aArray);
+
+	return const_cast<ArrayIterator<Contents*>*>(new ArrayIterator<Contents*>(&this->contents));
+
+	//return new ArrayIterator<Contents*>(const_cast<Contents*>(&this->contents));
+}

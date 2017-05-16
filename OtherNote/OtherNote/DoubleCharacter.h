@@ -19,6 +19,7 @@ public:
 	bool operator==(const DoubleCharacter& source);
 	bool operator!=(const DoubleCharacter& source);
 	char* GetValue() const;
+	virtual ArrayIterator<Contents*>* CreateIterator() const;
 private:
 	char value[2];
 };

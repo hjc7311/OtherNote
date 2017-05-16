@@ -19,6 +19,7 @@ public:
 	Contents* operator[](Long index);
 	Long GetCapacity() const;
 	Long GetLength() const;
+	virtual ArrayIterator<Contents*>* CreateIterator() const;
 protected:
 	Array<Contents*> contents;
 	Long capacity;
