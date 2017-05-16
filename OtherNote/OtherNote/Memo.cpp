@@ -7,8 +7,7 @@
 Memo::Memo(Long capacity)
 	:Composite(capacity)
 {
-	this->AddLine(new Line);
-	this->row = 0;
+	this->row = Composite::Add(new Line);
 }
 
 Memo::Memo(const Memo& source)
@@ -31,8 +30,8 @@ Contents* Memo::Clone() {
 	return new Memo(*this);
 }
 
-Long Memo::AddLine(Contents *contentsLink) {
-	this->row = Composite::Add(contentsLink);
+Long Memo::AddLine() {
+	this->row = Composite::Add(new Line);
 	return this->row;
 }
 

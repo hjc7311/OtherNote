@@ -1,7 +1,6 @@
 //Composite.cpp
 
 #include "Composite.h"
-#include "Line.h"
 
 Composite::Composite(Long capacity)
 	:contents(capacity) {
@@ -13,7 +12,7 @@ Composite::~Composite() {
 	Long i = 0;
 	while (i < this->length) {
 		if (this->contents.GetAt(i) != 0) {
-			delete dynamic_cast<Line*>(this->contents.GetAt(i));
+			delete this->contents.GetAt(i);
 		}
 		i++;
 	}

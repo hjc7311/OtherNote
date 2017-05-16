@@ -22,6 +22,10 @@ BOOL NoteBookForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	CFrameWnd::OnCreate(lpCreateStruct);
 	this->memo = new Memo;
 	this->endComposition = true;
+//	CreateSolidCaret(200,200);          //캐럿 생성
+//SetCaretPos(CPoint(0,0));    //위치 설정
+//ShowCaret();    
+
 	return FALSE;
 }
 #include "PaintVisitor.h"
@@ -37,7 +41,22 @@ void NoteBookForm::OnPaint() {
 */
 	PaintVisitor paintVisitor(&dc);
 
+	//CString characters;
+	//Long i = 0;
+	//Long j;
+	//Line *lineLink;
+	//Character *characterLink;
+	RECT rect;
+	GetClientRect(&rect);
+	dc.DrawText(CString("a"), &rect, 0);
 	this->memo->Accept(&paintVisitor);
+	CFont *cfont = CWnd::GetFont();
+	LOGFONT logfont;
+	cfont->GetLogFont(&logfont);
+	LONG width = logfont.lfWidth;
+	CreateSolidCaret(200,200);
+	SetCaretPos(CPoint(0,width));
+	ShowCaret();
 	
 	/*Long i = 0;
 	Long j;
@@ -74,7 +93,7 @@ void NoteBookForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	Line *lineLink = this->memo->GetLine(this->memo->row);
 
 	if (nChar == VK_RETURN) {
-		this->memo->AddLine(new Line);
+		this->memo->AddLine();
 		lineLink = this->memo->GetLine(this->memo->row);
 	}
 	else if (nChar == VK_TAB) {

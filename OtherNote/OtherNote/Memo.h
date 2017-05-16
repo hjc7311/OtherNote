@@ -15,12 +15,12 @@ public:
 	virtual ~Memo();
 	virtual Contents* Clone();
 	Memo& operator=(const Memo& source);
-	Long AddLine(Contents *contentsLink);
+	Long AddLine();
 	Long RemoveLine(Long index);
 	Line* GetLine(Long index);
 	Line* operator[](Long index);
 	Long GetRow() const;
-	void Accept(Visitor* visitor);
+	void Memo::Accept(Visitor* visitor);
 public:
 	Long row;
 };
