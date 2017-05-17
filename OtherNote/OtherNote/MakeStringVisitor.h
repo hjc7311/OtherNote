@@ -27,4 +27,4 @@ inline string& MakeStringVisitor::GetStr() const{
 	return const_cast<string&>(this->str);
 }
 
-#endif	//MakeStringVisitor.h
+#endif

@@ -5,9 +5,6 @@
 #define _MEMO_H
 
 #include "Composite.h"
-#include "Iterator.h"
-#include <string>
-using namespace std;
 
 class Visitor;
 class Line;
@@ -23,9 +20,7 @@ public:
 	Line* GetLine(Long index);
 	Line* operator[](Long index);
 	Long GetRow() const;
-	void Accept(Visitor* visitor);
-//	virtual ArrayIterator<Contents*>* CreateIterator() const;
-	//string MakeMemoString();
+	void Memo::Accept(Visitor* visitor);
 public:
 	Long row;
 };

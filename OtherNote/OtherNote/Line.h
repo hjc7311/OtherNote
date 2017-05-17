@@ -23,12 +23,9 @@ public:
 	Long Erase();
 	Character* GetCharacter(Long index);
 	Character* operator[](Long index);
-	void Accept(Visitor* visitor);
 	Long GetColumn() const;
-
-//	string MakeLineString();
-//	void Accept(Visitor* visitor);
-//	virtual ArrayIterator<Contents*>* CreateIterator() const;
+	string GetLineString();
+	void Accept(Visitor* visitor);
 public:
 	Long column;
 };

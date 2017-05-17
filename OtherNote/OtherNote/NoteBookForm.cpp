@@ -22,12 +22,13 @@ BOOL NoteBookForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	CFrameWnd::OnCreate(lpCreateStruct);
 	this->memo = new Memo;
 	this->endComposition = true;
-	
+//	CreateSolidCaret(200,200);          //캐럿 생성
+//SetCaretPos(CPoint(0,0));    //위치 설정
+//ShowCaret();    
+
 	return FALSE;
 }
-
 #include "PaintVisitor.h"
-#include "ArrayIterator.h"
 void NoteBookForm::OnPaint() {
 	CPaintDC dc(this);
 /*
@@ -38,7 +39,6 @@ void NoteBookForm::OnPaint() {
 	font.CreatePointFont(200, "Tahoma");
 	dc.SelectObject(&font);
 */
-
 	PaintVisitor paintVisitor(&dc);
 
 	//CString characters;
@@ -46,62 +46,23 @@ void NoteBookForm::OnPaint() {
 	//Long j;
 	//Line *lineLink;
 	//Character *characterLink;
-		
+	/*RECT rect;
+	GetClientRect(&rect);
+	dc.DrawText(CString("a"), &rect, 0);*/
 	this->memo->Accept(&paintVisitor);
-	
-	//this->memo->GetLine(0)->Accept(&paintVisitor);
-
-
-/*
+	/*CFont *cfont = CWnd::GetFont();
+	LOGFONT logfont;
+	cfont->GetLogFont(&logfont);
+	LONG width = logfont.lfWidth;
+	CreateSolidCaret(200,200);
+	SetCaretPos(CPoint(0,width));
+	ShowCaret();
+	*/
+	/*Long i = 0;
+	Long j;
 	Line *lineLink;
 	Character *characterLink;
-
-//	ArrayIterator<Line*> *arrayIterator = (ArrayIterator<Line*>*)this->memo->CreateIterator();
-//	ArrayIterator<Line*> *arrayIterator = dynamic_cast<ArrayIterator<Line*>*>(this->memo->CreateIterator());
-	ArrayIterator<Contents*> *arrayIterator = const_cast<ArrayIterator<Contents*>*>(this->memo->CreateIterator());
-
-
-	//ArrayIterator<Contents*> *arrayIterator = this->memo->CreateIterator();		
-//	ArrayIterator<Character*> *lineIterator;
-	ArrayIterator<Contents*> *lineIterator;
-
-	arrayIterator->First();
-	while (arrayIterator->IsDone() != true) {
-		lineLink = static_cast<Line*>(arrayIterator->CurrentItem());
-		//lineIterator = (ArrayIterator<Character*>*)lineLink->CreateIterator();
-//		lineIterator = dynamic_cast<ArrayIterator<Character*>*>(lineLink->CreateIterator());
-		lineIterator = const_cast<ArrayIterator<Contents*>*>(lineLink->CreateIterator());
-
-		
-		lineIterator->First();
-		while (lineIterator->IsDone() != true) {
-			characterLink = static_cast<Character*>(lineIterator->CurrentItem());
-			if (dynamic_cast<SingleCharacter*>(characterLink)) {
-				characters += (dynamic_cast<SingleCharacter*>(characterLink))->GetValue();
-			}
-			else if (dynamic_cast<DoubleCharacter*>(characterLink)) {
-				characters += (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()[0];
-				characters += (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()[1];
-			}
-
-			//if (lineIterator != 0) {
-			//	delete lineIterator;
-			//	lineIterator = 0;
-			//}
-			lineIterator->Next();
-		}
-
-		//if (arrayIterator != 0) {
-		//	delete arrayIterator;
-		//	arrayIterator = 0;
-		//}
-		characters += '\n';
-		arrayIterator->Next();
-	}
-	
-	
-	
-	/*while (i < this->memo->GetLength()) {
+	while (i < this->memo->GetLength()) {
 		lineLink = this->memo->GetLine(i);
 		j = 0;
 		while (j < lineLink->GetLength()){
@@ -117,14 +78,9 @@ void NoteBookForm::OnPaint() {
 		}
 		characters += '\n';
 		i++;
-	}*/
-	
-
-	//dc.DrawText(characters, &rect, DT_EDITCONTROL|DT_WORDBREAK|DT_LEFT|DT_EXPANDTABS);
-	//dc.DrawText(characters, NULL, DT_EDITCONTROL | DT_WORDBREAK | DT_LEFT | DT_EXPANDTABS);
-
+	}
+	dc.DrawText(characters, &rect, DT_EDITCONTROL|DT_WORDBREAK|DT_LEFT|DT_EXPANDTABS);*/
 	//this->RedrawWindow();
-	
 }
 
 void NoteBookForm::OnClose() {

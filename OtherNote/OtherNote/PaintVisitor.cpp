@@ -61,8 +61,23 @@ void PaintVisitor::Visit(Memo *memo) {
 	
 	RECT rect = {0, 0, 500, 500};
 	CFont font;
+	//font.CreateFont(
+	//	130,                        // nHeight
+ //     0,                         // ntWidth
+ //     0,                         // nEscapement
+ //     0,                         // nOrientation
+ //     FW_NORMAL,                 // nWeight
+ //     TRUE,                     // bItalic
+ //     TRUE,                     // bUnderline
+ //     0,                         // cStrikeOut
+ //     ANSI_CHARSET,              // nCharSet
+ //     OUT_DEFAULT_PRECIS,        // nOutPrecision
+ //     CLIP_DEFAULT_PRECIS,       // nClipPrecision
+ //     DEFAULT_QUALITY,           // nQuality
+ //     DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
+ //     _T("consolas")
+	//	);
 	font.CreatePointFont(200, "Tahoma");
 	dc->SelectObject(&font);
-	//this->dc->DrawText(CString(makeStringVisitor.GetStr().c_str()), &rect,  DT_EDITCONTROL|DT_WORDBREAK|DT_LEFT|DT_EXPANDTABS);
 	this->dc->DrawText(CString(makeStringVisitor.GetStr().c_str()), &rect,  DT_EDITCONTROL|DT_WORDBREAK|DT_LEFT|DT_EXPANDTABS);
 }
