@@ -1,12 +1,11 @@
 // MakeStringVisitor.h
 
-#ifndef MAKESTRINGVISITOR_H
+#ifndef MAKESTRINGSVISITOR_H
 #define MAKESTRINGSVISITOR_H
 
 #include "Visitor.h"
 #include <string>
 using namespace std;
-
 
 class MakeStringVisitor : public Visitor {
 public:
@@ -27,4 +26,4 @@ inline string& MakeStringVisitor::GetStr() const{
 	return const_cast<string&>(this->str);
 }
 
-#endif
+#endif	//_MAKESTRINGVISITOR_H

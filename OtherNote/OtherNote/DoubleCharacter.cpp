@@ -1,6 +1,7 @@
 //DoubleCharacter.cpp
 
 #include "DoubleCharacter.h"
+#include "ArrayIterator.h"
 
 DoubleCharacter::DoubleCharacter()
 {
@@ -41,4 +42,8 @@ bool DoubleCharacter::IsEqual(const DoubleCharacter& other) {
 		ret = true;
 	}
 	return ret;
+}
+
+ArrayIterator<Contents*>* DoubleCharacter::CreateIterator() const {
+	return 0;
 }

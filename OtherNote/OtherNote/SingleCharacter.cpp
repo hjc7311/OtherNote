@@ -1,8 +1,11 @@
 //SingleCharacter.cpp
 
 #include "SingleCharacter.h"
+#include "ArrayIterator.h"
 
-SingleCharacter::SingleCharacter() {
+
+SingleCharacter::SingleCharacter()
+	:Character() {
 	this->value = ' ';
 }
 
@@ -58,4 +61,8 @@ bool SingleCharacter::operator!=(const SingleCharacter& other) {
 		ret = true;
 	}
 	return ret;
+}
+
+ArrayIterator<Contents*>* SingleCharacter::CreateIterator() const {
+	return 0;
 }

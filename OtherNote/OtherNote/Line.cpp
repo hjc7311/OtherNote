@@ -4,6 +4,7 @@
 #include "SingleCharacter.h"
 #include "DoubleCharacter.h"
 #include "Visitor.h"
+#include "ArrayIterator.h"
 
 Line::Line(Long capacity)
 	:Composite(capacity) {
@@ -56,26 +57,50 @@ Character* Line::operator[](Long index) {
 	return static_cast<Character*>(Composite::GetAt(index));
 }
 
-string Line::GetLineString() {
-	string lineString;
 
-	Character *characterLink;
-	Long i = 0;
-	while (i < this->length) {
-		
-		characterLink = this->GetCharacter(i);
-		if (dynamic_cast<SingleCharacter*>(characterLink)) {
-			lineString += (dynamic_cast<SingleCharacter*>(characterLink))->GetValue();
-		}
-		else if (dynamic_cast<DoubleCharacter*>(characterLink)) {
-			lineString += (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()[0];
-			lineString += (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()[1];
-		}
-		i++;
-	}
-	return lineString;
-}
+//string Line::MakeLineString() {
+//	string lineString;
+//
+//	ArrayIterator *i = static_cast<ArrayIterator*>(this->CreateIterator());
+//
+//	i->First();
+//	while (i->IsDone() == false) {
+//		if (dynamic_cast<SingleCharacter*>(i->GetCurrentItem())) { //this->GetCharacter(i->GetCurrent))) {
+//			lineString += (dynamic_cast<SingleCharacter*>(i->GetCurrentItem()))->GetValue();
+//		}
+//		else if (dynamic_cast<DoubleCharacter*>(i->GetCurrentItem())) {
+//			lineString += (dynamic_cast<DoubleCharacter*>(i->GetCurrentItem()))->GetValue()[0];
+//			lineString += (dynamic_cast<DoubleCharacter*>(i->GetCurrentItem()))->GetValue()[1];
+//		}
+//		i->Next();
+//	}
+//	lineString += '\r';
+//	lineString += '\n';
+//	if (i != 0) {
+//		delete i;
+//		i = 0;
+//	}
+//	return lineString;
 
+	//Character *characterLink;
+	//Long i = 0;
+	//while (i < this->length) {
+	//	
+	//	characterLink = this->GetCharacter(i);
+	//	if (dynamic_cast<SingleCharacter*>(characterLink)) {
+	//		lineString += (dynamic_cast<SingleCharacter*>(characterLink))->GetValue();
+	//	}
+	//	else if (dynamic_cast<DoubleCharacter*>(characterLink)) {
+	//		lineString += (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()[0];
+	//		lineString += (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue()[1];
+	//	}
+	//	i++;
+	//}
+	//lineString += '\n';
+
+	//return lineString;
+//}
+//
 void Line::Accept(Visitor* visitor) {
 	visitor->Visit(this);
 }

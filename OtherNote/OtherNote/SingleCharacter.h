@@ -18,6 +18,7 @@ public :
 	bool operator==(const SingleCharacter& other);
 	bool operator!=(const SingleCharacter& other);
 	char GetValue() const;
+	virtual ArrayIterator<Contents*>* CreateIterator() const;
 private:
 	char value;
 };
