@@ -4,8 +4,7 @@
 #include "ArrayIterator.h"
 
 
-SingleCharacter::SingleCharacter()
-	:Character() {
+SingleCharacter::SingleCharacter() {
 	this->value = ' ';
 }
 

@@ -31,7 +31,7 @@ private:
 
 template <class Item>
 inline Array<Item>* ArrayIterator<Item>::GetArray() const {
-	return const_cast<Array<Item>*>(this->array);
+	sreturn const_cast<Array<Item>*>(this->array);
 }
 
 template <class Item>

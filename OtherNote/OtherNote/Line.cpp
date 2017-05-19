@@ -57,6 +57,11 @@ Character* Line::operator[](Long index) {
 	return static_cast<Character*>(Composite::GetAt(index));
 }
 
+//ArrayIterator<Contents*>* Line::CreateIterator() const {
+//	return Composite::CreateIterator();
+//
+////	return new ArrayIterator<Contents*>(&this->contents);
+//}
 
 //string Line::MakeLineString() {
 //	string lineString;

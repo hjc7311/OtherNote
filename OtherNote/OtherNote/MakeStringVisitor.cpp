@@ -82,12 +82,6 @@ void MakeStringVisitor::Visit(Memo *memo){
 
 		memoIterator->Next();
 	}
-
-
-	if (memoIterator != 0) {
-		delete memoIterator;
-		memoIterator = 0;
-	}
 	
 	/*
 	Long i = 0;
@@ -95,7 +89,7 @@ void MakeStringVisitor::Visit(Memo *memo){
 		MakeStringVisitor makeStringVisitor;
 		memo->GetLine(i)->Accept(&makeStringVisitor);
 		this->str += makeStringVisitor.GetStr();
-		this->str += '\n';¤À
+		this->str += '\n';
 		i++;
 	}
 	*/

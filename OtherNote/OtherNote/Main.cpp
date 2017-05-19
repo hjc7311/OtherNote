@@ -4,30 +4,58 @@
 #include "DoubleCharacter.h"
 #include "Line.h"
 #include "Memo.h"
-#include "MakeStringVisitor.h"
 #include <iostream>
 using namespace std;
-typedef signed long int Long;
 
 int main(int argc, char *argv[]) {
 	Memo memo;
-	memo.AddLine();
-	Long row = memo.GetRow();
-	Line *lineLink = memo.GetLine(row);
-	Long index = lineLink->Write('a');
-	MakeStringVisitor makeStringVisitor;
-	makeStringVisitor.Visit(lineLink);
-	string str = makeStringVisitor.GetStr();
-	cout<<str<<endl;
-	row = memo.AddLine();
-	lineLink = memo.GetLine(row);
-	lineLink->Write("한");
-	lineLink->Write("글");
-	makeStringVisitor.Visit(lineLink);
-	str = makeStringVisitor.GetStr();
-	cout<<str<<endl;
-
-
+	Line *lineLink = new Line;
 	
+	Long index = memo.AddLine(lineLink);
+
+	index = lineLink->Write('a');
+	Character *characterLink = lineLink->GetCharacter(index);
+	
+	lineLink = new Line;
+	index = memo.AddLine(lineLink);
+
+	index = lineLink->Write("가");
+	characterLink = lineLink->GetCharacter(index);
+
+	lineLink = new Line;
+	index = memo.AddLine(lineLink);
+
+	index = lineLink->Write("값");
+	characterLink = lineLink->GetCharacter(index);
+
+	lineLink = new Line;
+	index = memo.AddLine(lineLink);
+
+	index = lineLink->Write('c');
+	characterLink = lineLink->GetCharacter(index);
+
+	Long i = 0;
+	Long j;
+	while (i < memo.GetLength()) {
+		j = 0;
+		lineLink = memo.GetLine(i);
+		while (j < lineLink->GetLength()) {
+			characterLink = lineLink->GetCharacter(j);
+			if (dynamic_cast<SingleCharacter*>(characterLink)) {
+				cout << (dynamic_cast<SingleCharacter*>(characterLink))->GetValue() << endl;
+			}
+			else if (dynamic_cast<DoubleCharacter*>(characterLink)) {
+				char str[3];
+				char *character = (dynamic_cast<DoubleCharacter*>(characterLink))->GetValue();
+				str[0] = character[0];
+				str[1] = character[1];
+				str[2] = '\0';
+				cout << str << endl;
+			}
+			j++;
+		}
+		i++;
+	}
+
 	return 0;
 }

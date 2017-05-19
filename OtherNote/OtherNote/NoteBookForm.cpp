@@ -22,17 +22,16 @@ BOOL NoteBookForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	CFrameWnd::OnCreate(lpCreateStruct);
 	this->memo = new Memo;
 	this->endComposition = true;
-	
+	//this->dc = new CPaintDC(this);
 	return FALSE;
+	
 }
 
 #include "PaintVisitor.h"
+#include "ArrayIterator.h"
 void NoteBookForm::OnPaint() {
 	CPaintDC dc(this);
-	
-
-
-	/*
+/*
 	RECT rect;
 	GetClientRect(&rect);
 
@@ -145,9 +144,6 @@ void NoteBookForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	else if (nChar == VK_TAB) {
 		lineLink->Write('\t');
 	}
-	else if (nChar == VK_BACK) {
-
-	}
 	else {
 		lineLink->Write(nChar);
 	}
@@ -171,7 +167,7 @@ LRESULT NoteBookForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
 		}
 		this->endComposition = false;
 		lineLink->Write(composition);
-	} 
+	}
 	if (lParam & GCS_RESULTSTR) {
 		this->endComposition = true;
 	
