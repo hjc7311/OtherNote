@@ -6,12 +6,15 @@
 
 #include "Character.h"
 
+class Visitor;
+
 class DoubleCharacter :public Character {
 public:
 	DoubleCharacter();
-	DoubleCharacter(char* value);
+	DoubleCharacter(char* value, Long width, Long height);
 	virtual ~DoubleCharacter();
-	virtual Contents* Clone();
+	virtual Contents* Clone() const;
+	virtual void Accept(Visitor *visitor);
 	DoubleCharacter(const DoubleCharacter& source);
 	DoubleCharacter& operator=(const DoubleCharacter& source);
 	bool IsEqual(const DoubleCharacter& source);

@@ -5,6 +5,9 @@
 #include "DoubleCharacter.h"
 #include "Visitor.h"
 #include "ArrayIterator.h"
+#include "CharacterFaces.h"
+
+#define KOREAN 127
 
 Line::Line(Long capacity)
 	:Composite(capacity) {
@@ -27,18 +30,22 @@ Line::~Line() {
 	//Composite::~Composite();
 }
 
-Contents* Line::Clone() {
+Contents* Line::Clone() const{
 	return new Line(*this);
 }
 
 Long Line::Write(char value) {
-	Long index = Composite::Add(new SingleCharacter(value));
+	CharacterFaces *instance = CharacterFaces::Instance();
+	CharacterSize characterSize = instance->GetCharacterSize(static_cast<Long>(value));
+	Long index = Composite::Add(new SingleCharacter(value, characterSize.GetWidth(), characterSize.GetHeight()));
 	this->column++;
 	return index;
 }
 
 Long Line::Write(char* value) {
-	Long index = Composite::Add(new DoubleCharacter(value));
+	CharacterFaces *instance = CharacterFaces::Instance();
+	CharacterSize characterSize = instance->GetCharacterSize(KOREAN);
+	Long index = Composite::Add(new DoubleCharacter(value, characterSize.GetWidth(), characterSize.GetHeight()));
 	this->column++;
 	return index;
 }

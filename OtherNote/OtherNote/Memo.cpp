@@ -28,7 +28,7 @@ Memo& Memo::operator=(const Memo& source) {
 	return *this;
 }
 
-Contents* Memo::Clone() {
+Contents* Memo::Clone() const {
 	return new Memo(*this);
 }
 

@@ -7,32 +7,30 @@ using namespace std;
 
 CharacterFaces* CharacterFaces::instance = 0;
 
-CharacterFaces::CharacterFaces(CDC *dc)
-	:characterSizes(95) {
-	this->capacity = 95;	
+CharacterFaces::CharacterFaces()
+	:characterSizes(96) {
+	this->capacity = 96;	
 	this->length = 0;
 	this->fontFamily = "Tahoma";
 	this->size = 500;
-	/*CFont font;
+	CFont font;
 	font.CreatePointFont(this->size, this->fontFamily.c_str());
-	dc->SelectObject(&font);*/
+	CDC dc;
+	dc.SelectObject(&font);
 	CSize size;
 	char i = 32;
 	while (i <= 126) {
 		//subjectString = string(1, i);
-		size = dc->GetTextExtent(CString(static_cast<char>(i)));
+		size = dc.GetTextExtent(CString(static_cast<char>(i)));
 		CharacterSize characterSize(size.cx, size.cy);
-		if (this->length < this->capacity)
-		{
-			this->characterSizes.Store(this->length, characterSize);
-		}
-		else if (this->length >= this->capacity) {
-			this->characterSizes.AppendFromRear(characterSize);
-			this->capacity++;
-		}
+		this->characterSizes.Store(this->length, characterSize);
 		this->length++;
 		i++;
 	}
+	size = dc.GetTextExtent(CString("°ª"));
+	CharacterSize characterSize(size.cx, size.cy);
+	this->characterSizes.Store(this->length, characterSize);
+	this->length++;
 }
 
 CharacterFaces::CharacterFaces(const CharacterFaces& source)
@@ -51,9 +49,9 @@ CharacterSize& CharacterFaces::GetCharacterSize(Long nChar) {
 	return this->characterSizes.GetAt(nChar-32);
 }
 
-CharacterFaces* CharacterFaces::Instance(CDC *dc) {
-	if (instance == 0) {
-		instance = new CharacterFaces(dc);
+CharacterFaces* CharacterFaces::Instance(){
+	if(instance==0){
+		instance = new CharacterFaces();
 	}
 	/*CFont font;
 	font.CreatePointFont(instance->GetSize(), instance->GetFontFamily().c_str());

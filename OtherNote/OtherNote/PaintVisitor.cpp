@@ -59,7 +59,7 @@ void PaintVisitor::Visit(Line *line) {
 void PaintVisitor::Visit(Memo *memo) {
 	MakeStringVisitor makeStringVisitor;
 	memo->Accept(&makeStringVisitor);
-	CharacterFaces *instance = CharacterFaces::Instance(this->dc);
+	CharacterFaces *instance = CharacterFaces::Instance();
 	CFont font;
 	font.CreatePointFont(instance->GetSize(), instance->GetFontFamily().c_str());
 	dc->SelectObject(&font);

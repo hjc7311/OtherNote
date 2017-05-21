@@ -16,7 +16,7 @@ public:
 	Memo(Long capacity = 250);
 	Memo(const Memo& source);
 	virtual ~Memo();
-	virtual Contents* Clone();
+	virtual Contents* Clone() const;
 	Memo& operator=(const Memo& source);
 	Long AddLine();
 	Long RemoveLine(Long index);

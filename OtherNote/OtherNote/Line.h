@@ -16,7 +16,7 @@ public:
 	Line(Long capacity = 256);
 	Line(const Line& source);
 	virtual ~Line();
-	virtual Contents* Clone();
+	virtual Contents* Clone() const;
 	Line& operator=(const Line& source);
 	Long Write(char value);
 	Long Write(char *value);
