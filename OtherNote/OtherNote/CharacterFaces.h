@@ -17,7 +17,7 @@ class CharacterFaces {
 	static CharacterFaces* instance;
 public:
 	~CharacterFaces();
-	static CharacterFaces* Instance();
+	static CharacterFaces* Instance(CDC *dc);
 	//void CalculateSize(Long type, Long *width, Long *height);
 	CharacterSize& GetCharacterSize(Long nChar);
 	Long GetSize() const;
@@ -26,7 +26,7 @@ public:
 	string GetFontFamily() const;
 	CharacterSize& operator[](Long index);
 protected:
-	CharacterFaces();
+	CharacterFaces(CDC *dc);
 	CharacterFaces(const CharacterFaces& source);
 	CharacterFaces& operator=(const CharacterFaces& source);
 private:
