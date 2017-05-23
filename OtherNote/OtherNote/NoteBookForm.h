@@ -25,7 +25,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
 	bool endComposition;
-	//CDC *dc;
+	CDC *dc;
 };
 
 #endif	//_NOTEBOOKFORM_H

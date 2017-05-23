@@ -5,6 +5,9 @@
 #include "Line.h"
 #include "SingleCharacter.h"
 #include "DoubleCharacter.h"
+#include "SaveVisitor.h"
+#include "LoadVisitor.h"
+#include "CharacterFaces.h"
 #include <Windows.h>
 
 BEGIN_MESSAGE_MAP(NoteBookForm, CFrameWnd)
@@ -21,7 +24,12 @@ NoteBookForm::NoteBookForm() {
 BOOL NoteBookForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	CFrameWnd::OnCreate(lpCreateStruct);
 	this->memo = new Memo;
+	this->dc = new CPaintDC(this);
+	CharacterFaces::Instance(this->dc);
 	this->endComposition = true;
+	LoadVisitor loadVisitor;
+	this->memo->Accept(&loadVisitor);
+	this->RedrawWindow();
 	//this->dc = new CPaintDC(this);
 	return FALSE;
 	
@@ -129,6 +137,9 @@ void NoteBookForm::OnPaint() {
 }
 
 void NoteBookForm::OnClose() {
+	SaveVisitor saveVisitor;
+	this->memo->Accept(&saveVisitor);
+
 	delete this->memo;
 	CFrameWnd::OnClose();
 }

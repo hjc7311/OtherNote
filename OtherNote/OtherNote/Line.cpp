@@ -35,7 +35,7 @@ Contents* Line::Clone() const{
 }
 
 Long Line::Write(char value) {
-	CharacterFaces *instance = CharacterFaces::Instance();
+	CharacterFaces *instance = CharacterFaces::Instance(0);
 	CharacterSize characterSize = instance->GetCharacterSize(static_cast<Long>(value));
 	Long index = Composite::Add(new SingleCharacter(value, characterSize.GetWidth(), characterSize.GetHeight()));
 	this->column++;
@@ -43,7 +43,7 @@ Long Line::Write(char value) {
 }
 
 Long Line::Write(char* value) {
-	CharacterFaces *instance = CharacterFaces::Instance();
+	CharacterFaces *instance = CharacterFaces::Instance(0);
 	CharacterSize characterSize = instance->GetCharacterSize(KOREAN);
 	Long index = Composite::Add(new DoubleCharacter(value, characterSize.GetWidth(), characterSize.GetHeight()));
 	this->column++;

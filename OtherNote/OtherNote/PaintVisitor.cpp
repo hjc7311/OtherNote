@@ -59,9 +59,9 @@ void PaintVisitor::Visit(Line *line) {
 void PaintVisitor::Visit(Memo *memo) {
 	MakeStringVisitor makeStringVisitor;
 	memo->Accept(&makeStringVisitor);
-	CharacterFaces *instance = CharacterFaces::Instance();
+	CharacterFaces *instance = CharacterFaces::Instance(this->dc);
 	CFont font;
-	font.CreatePointFont(instance->GetSize(), instance->GetFontFamily().c_str());
+	font.CreatePointFont(instance->GetFontSize(), instance->GetFontFamily().c_str());
 	dc->SelectObject(&font);
 	/*CFont font;
 	font.CreatePointFont(500, "Tahoma");
