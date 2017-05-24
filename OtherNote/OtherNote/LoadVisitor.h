@@ -19,8 +19,8 @@ public:
 	void Visit(Line *line);
 private:
 	fstream fs;
-	bool isEof;
-	bool isBad;
+	//bool isEof;
+	//bool isBad;
 };
 
 

@@ -7,15 +7,15 @@
 #include "Memo.h"
 
 SaveVisitor::SaveVisitor()
-	:fs("aha.txt") {
+	:fs("OtherNote.txt", ios::out | ios::trunc) {
 }
 
 SaveVisitor::SaveVisitor(const SaveVisitor& source)
-	:fs("aha.txt", ios::in | ios::out) {
+	:fs("OtherNote.txt", ios::out | ios::trunc) {
 }
 
 SaveVisitor::~SaveVisitor(){
-	fs.close();
+	this->fs.close();
 }
 
 SaveVisitor& SaveVisitor::operator=(const SaveVisitor& source) {
@@ -30,7 +30,8 @@ void SaveVisitor::Visit(DoubleCharacter *doubleCharacter) {
 
 void SaveVisitor::Visit(Memo *memo) {
 	CharacterFaces *characterFaces = CharacterFaces::Instance(0);
-	this->fs<<characterFaces->GetFontFamily().c_str()<<"\r\n"<<characterFaces->GetFontSize()<<"\r\n";
+	this->fs << characterFaces->GetFontFamily().c_str() << "\r\n";
+	this->fs<<characterFaces->GetFontSize()<<"\r\n";
 
 	Long i = 0;
 	while (i < memo->GetLength()) {

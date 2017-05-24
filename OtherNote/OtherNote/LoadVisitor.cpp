@@ -12,16 +12,16 @@ using namespace std;
 typedef signed long int Long;
 
 LoadVisitor::LoadVisitor()
-	:fs("aha.txt", ios::in | ios::out) {
-	this->isEof = false;
-	this->isBad = false;
-	if(!(this->fs.bad())){
-		this->isBad = true;
-	}
+	:fs("OtherNote.txt", ios::in) {
+	//this->isEof = false;
+	//this->isBad = false;
+	//if(!(this->fs.bad())){
+	//	this->isBad = true;
+	//}
 }
 
 LoadVisitor::LoadVisitor(const LoadVisitor& source)
-	:fs("aha.txt") {
+	:fs("OtherNote.txt", ios::in) {
 }
 
 LoadVisitor::~LoadVisitor() {
@@ -40,48 +40,45 @@ void LoadVisitor::Visit(DoubleCharacter *doubleCharacter) {
 
 void LoadVisitor::Visit(Memo *memo) {
 	char buffer[256];
-	if(this->isBad == true){
+
+	if (!this->fs.fail()) {
+
 		this->fs.getline(buffer, sizeof(buffer));
-		//Long length = CString(buffer).GetLength();
+
 		CharacterFaces *characterFaces = CharacterFaces::Instance(0);
-		characterFaces->SetFontFamily(string(buffer));
+		characterFaces->SetFontFamily(static_cast<string>(buffer));
+
 		this->fs.getline(buffer, sizeof(buffer));
-		CString str(buffer);
-		//str.Format("%d", buffer);
-		//this->fontSize = (LPCTSTR)str;
-		int fontSize = atoi(str);
+		
+		Long fontSize = atoi(buffer);
 		characterFaces->SetFontSize(fontSize);
+		
 		Long j;
 		Long i = 0;
-		while(this->isEof == false) {
-		Line *line = memo->GetLine(i);
-		line->Accept(this);
-		j = memo->AddLine();
-		i++;
+//		this->fs.getline(buffer, sizeof(buffer));
+		while (!this->fs.eof()) {
+			Line *line = memo->GetLine(i);
+			line->Accept(this);
+			j = memo->AddLine();
+			i++;
 		}
 		memo->RemoveLine(j);
 	}
 }
 
 void LoadVisitor::Visit(Line *line) {
-	//char buffer[256];
-	//this->fs.getline(buffer, sizeof(buffer));
-	////Long length = CString(buffer).GetLength();
-	//CharacterFaces *characterFaces = CharacterFaces::Instance(0);
-	//characterFaces->SetFontFamily(string(buffer));
-	//this->fs.getline(buffer, sizeof(buffer));
-	//CString str;
-	//str.Format("%d", buffer);
-	////this->fontSize = (LPCTSTR)str;
-	//int fontSize = atoi(str);
-	//characterFaces->SetFontSize(fontSize);
+
 	char buffer[256];
+
 	this->fs.getline(buffer, sizeof(buffer));
-	if(!fs.eof()) {
+
+//	if(!this->fs.eof()) {
 		Long length = CString(buffer).GetLength();
+	
 		char doubleCharacter[2];
+
 		Long i = 0;
-		while(i < length) {
+		while(i < length-1) {
 			if(buffer[i] >= 0 && buffer[i] < 130){
 				line->Write(buffer[i]);
 			}
@@ -93,8 +90,11 @@ void LoadVisitor::Visit(Line *line) {
 			}
 			i++;
 		}
-	}
-	else {
-		this->isEof = true;
-	}
+
+//		this->fs.getline(buffer, sizeof(buffer));
+
+//	}
+	//else {
+	//	this->isEof = true;
+	//}
 }

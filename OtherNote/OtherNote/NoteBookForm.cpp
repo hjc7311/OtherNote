@@ -23,14 +23,19 @@ NoteBookForm::NoteBookForm() {
 
 BOOL NoteBookForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	CFrameWnd::OnCreate(lpCreateStruct);
+	
 	this->memo = new Memo;
 	this->dc = new CPaintDC(this);
+	
 	CharacterFaces::Instance(this->dc);
-	this->endComposition = true;
+	
 	LoadVisitor loadVisitor;
 	this->memo->Accept(&loadVisitor);
+
+	this->endComposition = true;
+
 	this->RedrawWindow();
-	//this->dc = new CPaintDC(this);
+
 	return FALSE;
 	
 }
@@ -140,7 +145,11 @@ void NoteBookForm::OnClose() {
 	SaveVisitor saveVisitor;
 	this->memo->Accept(&saveVisitor);
 
-	delete this->memo;
+	if (this->memo != 0) {
+		delete this->memo;
+		this->memo = 0;
+	}
+
 	CFrameWnd::OnClose();
 }
 

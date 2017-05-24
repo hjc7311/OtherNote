@@ -29,7 +29,7 @@ public:
 //	string MakeLineString();
 //	void Accept(Visitor* visitor);
 //	virtual ArrayIterator<Contents*>* CreateIterator() const;
-public:
+private:
 	Long column;
 };
 
