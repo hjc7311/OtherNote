@@ -1,30 +1,34 @@
-//CharacterSize.cpp
+// CharacterSize.cpp
 
 #include "CharacterSize.h"
+typedef signed long int Long;
 
-CharacterSize::CharacterSize() {
-	this->width = 0;
-	this->height = 0;
+CharacterSize::CharacterSize(){
 }
-
 CharacterSize::CharacterSize(Long width, Long height) {
 	this->width = width;
-	this->height = height;
+	this->height=height;
 }
-
 CharacterSize::CharacterSize(const CharacterSize& source) {
 	this->width = source.width;
 	this->height = source.height;
+}
+CharacterSize::~CharacterSize() {
+
 }
 
 CharacterSize& CharacterSize::operator=(const CharacterSize& source) {
 	this->width = source.width;
 	this->height = source.height;
-	
 	return *this;
 }
-
-CharacterSize::~CharacterSize() {
-
-}
-
+bool CharacterSize::IsEqual(const CharacterSize& other) { return false; }
+bool CharacterSize::IsNotEqual(const CharacterSize& other) { return false; }
+bool CharacterSize::operator==(const CharacterSize& other) { return false; }
+bool CharacterSize::operator!=(const CharacterSize& other) { return false; }
+bool CharacterSize::IsGreaterThan(const CharacterSize& other) { return false; }
+bool CharacterSize::IsLesserThan(const CharacterSize& other) { return false; }
+bool CharacterSize::operator<(const CharacterSize& other) { return false; }
+bool CharacterSize::operator<=(const CharacterSize& other) { return false; }
+bool CharacterSize::operator>(const CharacterSize& other) { return false; }
+bool CharacterSize::operator>=(const CharacterSize& other) { return false; }

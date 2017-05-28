@@ -7,18 +7,17 @@ Character::Character(Long width, Long height) {
 	this->height = height;
 }
 
+Character::~Character() {
+
+}
+
 Character::Character(const Character& source) {
 	this->width = source.width;
 	this->height = source.height;
 }
 
-Character::~Character() {
-
-}
-
 Character& Character::operator=(const Character& source) {
 	this->width = source.width;
 	this->height = source.height;
-
 	return *this;
 }

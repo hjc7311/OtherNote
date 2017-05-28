@@ -20,11 +20,12 @@ Caret::Caret(NoteBookForm *noteBookForm) {
 	this->noteBookFormLink = noteBookForm;
 	
 	CharacterFaces *characterFaces = CharacterFaces::Instance(this->noteBookFormLink->GetDC());
-	CharacterSize characterSize = characterFaces->GetCharacterSize(95);
+	CharacterSize characterSize = characterFaces->GetCharacterSize(127);
 	
 	this->width = 2;
 	this->height = characterSize.GetHeight();
 	this->noteBookFormLink->CWnd::CreateSolidCaret(this->width, this->height);
+	//this->noteBookFormLink->CWnd::CreateSolidCaret(2, 80);
 
 	this->xPosition = 0;
 	this->yPosition = 0;
@@ -56,6 +57,9 @@ Caret* Caret::Instance(NoteBookForm *noteBookForm) {
 void Caret::Move(Long xPos, Long yPos) {
 	this->xPosition = xPos;
 	this->yPosition = yPos;
+
+	CWnd::SetCaretPos(CPoint(xPosition, yPosition));
+
 }
 
 void Caret::MoveNextCharacter() {
@@ -96,12 +100,12 @@ void Caret::MovePreviousCharacter() {
 }
 
 void Caret::MoveNextLine() {
-	Memo *memo = this->noteBookFormLink->GetMemo();
+	/*Memo *memo = this->noteBookFormLink->GetMemo();
 	Line *line = memo->GetLine(memo->GetRow() - 1);
 	Character *character = line->GetCharacter(line->GetColumn() - 1);
-	Long moveHeight = character->GetHeight();
+	Long moveHeight = character->GetHeight();*/
 
-	this->yPosition += moveHeight;
+	this->yPosition += this->height;
 	this->xPosition = 0;
 	//line = memo->GetLine(memo->GetRow());
 	//Long moveWidth;

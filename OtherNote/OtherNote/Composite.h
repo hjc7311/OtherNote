@@ -5,22 +5,22 @@
 #define _COMPOSITE_H
 
 #include "Contents.h"
-#include "Iterator.h"
 #include "Array.h"
 
-class Composite : public Contents {
+class Composite :public Contents {
 public:
 	Composite(Long capacity);
 	Composite(const Composite& source);
 	virtual ~Composite() = 0;
 	virtual Long Add(Contents *contentsLink);
+	virtual Long Insert(Long index, Contents *contents);
 	virtual Long Remove(Long index);
 	virtual Contents* GetAt(Long index);
 	Composite& operator=(const Composite& source);
 	Contents* operator[](Long index);
 	Long GetCapacity() const;
 	Long GetLength() const;
-	virtual Iterator<Contents*>* CreateIterator() const = 0;
+	virtual ArrayIterator<Contents*>* CreateIterator() const;
 protected:
 	Array<Contents*> contents;
 	Long capacity;

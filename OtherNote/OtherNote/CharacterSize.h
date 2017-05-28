@@ -1,6 +1,4 @@
-#pragma once
-//CharacterSize.h
-
+// CharacterSize.h
 #ifndef _CHARACTERSIZE_H
 #define _CHARACTERSIZE_H
 
@@ -13,24 +11,25 @@ public:
 	CharacterSize(const CharacterSize& source);
 	~CharacterSize();
 	CharacterSize& operator=(const CharacterSize& source);
-	//bool IsEqual(const CharacterSize& other);
-	//bool IsNotEqual(const CharacterSize& other);
-	//bool operator==(const CharacterSize& other);
-	//bool operator!=(const CharacterSize& other);
-	//bool IsGreaterThan(const CharacterSize& other);
-	//bool IsLesserThan(const CharacterSize& other);
-	//bool operator>(const CharacterSize& other);
-	//bool operator>=(const CharacterSize& other);
-	//bool operator<(const CharacterSize& other);
-	//bool operator<=(const CharacterSize& other);
+	bool IsEqual(const CharacterSize& other);
+	bool IsNotEqual(const CharacterSize& other);
+	bool operator==(const CharacterSize& other);
+	bool operator!=(const CharacterSize& other);
+	bool IsGreaterThan(const CharacterSize& other);
+	bool IsLesserThan(const CharacterSize& other);
+	bool operator<(const CharacterSize& other);
+	bool operator<=(const CharacterSize& other);
+	bool operator>(const CharacterSize& other);
+	bool operator>=(const CharacterSize& other);
 	Long GetWidth() const;
 	Long GetHeight() const;
+
 private:
 	Long width;
 	Long height;
 };
 
-inline Long CharacterSize::GetWidth() const {
+inline Long CharacterSize::GetWidth() const{
 	return this->width;
 }
 
@@ -38,4 +37,5 @@ inline Long CharacterSize::GetHeight() const {
 	return this->height;
 }
 
-#endif	//_CHARACTERSIZE_H
+
+#endif // CHARACTERSIZE_H

@@ -6,15 +6,15 @@
 
 #include "Contents.h"
 
-class Character : public Contents {
-
+class Character :public Contents {
 public:
-	Character(Long width = 0, Long height = 0);
-	Character(const Character& source);
+	Character(Long width=0, Long height=0);
 	virtual ~Character() = 0;
+	Character(const Character& source);
 	Character& operator=(const Character& source);
 	Long GetWidth() const;
 	Long GetHeight() const;
+
 protected:
 	Long width;
 	Long height;
@@ -27,5 +27,7 @@ inline Long Character::GetWidth() const {
 inline Long Character::GetHeight() const {
 	return this->height;
 }
+
+
 
 #endif	//_CHARACTER_H

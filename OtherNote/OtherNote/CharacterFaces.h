@@ -1,39 +1,48 @@
 #pragma once
+#pragma once
 //CharacterFaces.h
 
 #ifndef _CHARACTERFACES_H
 #define _CHARACTERFACES_H
 
-#include "CharacterSize.h"
 #include "Array.h"
+#include"CharacterSize.h"
 #include <string>
 using namespace std;
 
+typedef signed long int Long;
+
 class CDC;
 class CharacterFaces {
+	
 public:
 	~CharacterFaces();
 	static CharacterFaces* Instance(CDC *dc);
+	//void CalculateSize(Long type, Long *width, Long *height);
 	CharacterSize& GetCharacterSize(Long nChar);
-	CharacterSize& operator[](Long nChar);
-
+	Long GetFontSize() const;
 	Long GetCapacity() const;
 	Long GetLength() const;
-	Long GetSize() const;
-	string& GetFontFamily() const;
+	string GetFontFamily() const;
+	CharacterSize& operator[](Long nChar);
+	void SetFontFamily(string fontFamily);
+	void SetFontSize(Long FontSize);
 protected:
-	CharacterFaces(CDC *dc = 0);
+	CharacterFaces(CDC *dc);
 	CharacterFaces(const CharacterFaces& source);
 	CharacterFaces& operator=(const CharacterFaces& source);
 private:
-	static CharacterFaces *_instance;
+	static CharacterFaces* instance;
+	string fontFamily;
+	Long fontSize;
 	Array<CharacterSize> characterSizes;
 	Long capacity;
 	Long length;
-	Long size;
-	string fontFamily;
 };
 
+inline Long CharacterFaces::GetFontSize() const {
+	return this->fontSize;
+}
 inline Long CharacterFaces::GetCapacity() const {
 	return this->capacity;
 }
@@ -42,12 +51,9 @@ inline Long CharacterFaces::GetLength() const {
 	return this->length;
 }
 
-inline Long CharacterFaces::GetSize() const {
-	return this->size;
+inline string CharacterFaces::GetFontFamily() const {
+	return this->fontFamily;
 }
 
-inline string& CharacterFaces::GetFontFamily() const{
-	return const_cast<string&>(this->fontFamily);
-}
 
 #endif	//_CHARACTERFACES_H

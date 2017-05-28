@@ -2,6 +2,9 @@
 
 #include "Memo.h"
 #include "Line.h"
+#include "Visitor.h"
+#include "Iterator.h"
+#include "ArrayIterator.h"
 
 Memo::Memo(Long capacity)
 	:Composite(capacity)
@@ -22,8 +25,11 @@ Memo::~Memo() {
 Memo& Memo::operator=(const Memo& source) {
 	Composite::operator=(source);
 	this->row = source.row;
-
 	return *this;
+}
+
+Contents* Memo::Clone() const {
+	return new Memo(*this);
 }
 
 Long Memo::AddLine() {
@@ -31,10 +37,15 @@ Long Memo::AddLine() {
 	return this->row;
 }
 
+Long Memo::InsertLine(Long index) {
+	this->row++;
+	index = Composite::Insert(index, new Line);
+	return index;	
+}
+
 Long Memo::RemoveLine(Long index) {
 	index = Composite::Remove(index);
 	this->row--;
-
 	return index;
 }
 
@@ -46,30 +57,27 @@ Line* Memo::operator[](Long index) {
 	return static_cast<Line*>(Composite::GetAt(index));
 }
 
-Contents* Memo::Clone() const {
-	return new Memo(*this);
-}
-
-#include "Visitor.h"
 void Memo::Accept(Visitor* visitor) {
+	//ArrayIterator<Line*> *lineIterator = new ArrayIterator<Line*>(&(this->contents));
+	//for (ArrayIterator<Line*> lineIterator(&(this->contents)); !lineIterator.IsDone(); lineIterator.Next()) {
+	//	i.CurrentItem()->Accept(visitor);
+	//}
 	visitor->Visit(this);
 }
 
-#include "ArrayIterator.h"
-Iterator<Contents*>* Memo::CreateIterator() const {
-	return new ArrayIterator<Contents*>(&this->contents);
+//ArrayIterator<Contents*>* Memo::CreateIterator() const {
+//	return Composite::CreateIterator();
+////	return new ArrayIterator<Contents*>(&this->contents);
+//}
+
+void Memo::SetRow(Long index) {
+	this->row = index;
 }
 
 void Memo::MoveUpRow() {
 	this->row--;
-	//if (this->row < 0) {
-	//	this->row++;
-	//}
 }
 
 void Memo::MoveDownRow() {
 	this->row++;
-	//if (this->row >= this->length) {
-	//	this->row--;
-	//}
 }

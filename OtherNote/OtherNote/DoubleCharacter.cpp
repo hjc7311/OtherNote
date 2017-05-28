@@ -1,6 +1,8 @@
 //DoubleCharacter.cpp
 
 #include "DoubleCharacter.h"
+#include "ArrayIterator.h"
+#include "Visitor.h"
 
 DoubleCharacter::DoubleCharacter()
 	:Character() {
@@ -9,35 +11,51 @@ DoubleCharacter::DoubleCharacter()
 }
 
 DoubleCharacter::DoubleCharacter(char* value, Long width, Long height)
-	: Character(width, height) {
+	:Character(width,height) {
 	this->value[0] = value[0];
 	this->value[1] = value[1];
-}
-
-DoubleCharacter::DoubleCharacter(const DoubleCharacter& source)
-	: Character(source) {
-	this->value[0] = source.value[0];
-	this->value[1] = source.value[1];
 }
 
 DoubleCharacter::~DoubleCharacter() {
 
 }
 
-DoubleCharacter& DoubleCharacter::operator=(const DoubleCharacter& source) {
-	Character::operator=(source);
+Contents* DoubleCharacter::Clone() const{
+	return new DoubleCharacter(*this);
+}
 
+DoubleCharacter::DoubleCharacter(const DoubleCharacter& source)
+	:Character(source)
+{
+	this->value[0] = source.value[0];
+	this->value[1] = source.value[1];
+}
+
+void DoubleCharacter::Accept(Visitor *visitor) {
+	visitor->Visit(this);
+}
+
+DoubleCharacter& DoubleCharacter::operator=(const DoubleCharacter& source)
+{
+	Character::operator=(source);
 	this->value[0] = source.value[0];
 	this->value[1] = source.value[1];
 
 	return *this;
 }
 
-Contents* DoubleCharacter::Clone() const {
-	return new DoubleCharacter(*this);
+bool DoubleCharacter::IsEqual(const DoubleCharacter& other) {
+	bool ret = false;
+	if (this->value[0] == other.value[0] && this->value[1] == other.value[1]) {
+		ret = true;
+	}
+	return ret;
 }
 
-#include "Visitor.h"
-void DoubleCharacter::Accept(Visitor *visitor) {
-	visitor->Visit(this);
+ArrayIterator<Contents*>* DoubleCharacter::CreateIterator() const {
+	return 0;
 }
+
+bool DoubleCharacter::IsNotEqual(const DoubleCharacter& source) { return false; }
+bool DoubleCharacter::operator==(const DoubleCharacter& source){ return false; }
+bool DoubleCharacter::operator!=(const DoubleCharacter& source){ return false; }
