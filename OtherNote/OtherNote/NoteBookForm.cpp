@@ -46,12 +46,10 @@ BOOL NoteBookForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	this->RedrawWindow();
 
 	return FALSE;
-	
 }
 
 #include "PaintVisitor.h"
 #include "ArrayIterator.h"
-
 
 void NoteBookForm::OnPaint() {
 	CPaintDC dc(this);
@@ -113,12 +111,7 @@ void NoteBookForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
 		lineLink->Write('\t');
 		caret->MoveNextTab();
 	}
-	else if(nChar == VK_BACK) {
-		caret->MovePreviousCharacter();
-
-		lineLink->Erase();
-	}
-	else {
+	else if (nChar >= 32 && nChar <= 126){// && nChar != VK_BACK){
 		lineLink->Write(nChar);
 		caret->MoveNextCharacter();
 	}
@@ -144,11 +137,16 @@ LRESULT NoteBookForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
 			lineLink->Erase();
 		}
 		this->endComposition = false;
-		lineLink->Write(composition);
+
+		if (!(composition[1] == '\x1b' && composition[0] == '\0')) {
+			lineLink->Write(composition);
+		}
+		else {
+			this->endComposition = true;
+		}
 	}
 	if (lParam & GCS_RESULTSTR) {
 		this->endComposition = true;
-	
 		lineLink->Erase();
 		lineLink->Write(composition);
 		caret->MoveNextCharacter();
@@ -237,6 +235,18 @@ void NoteBookForm::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 		if (column < line->GetLength()) {
 			line->MoveRightColumn();
 			caret->MoveNextCharacter();
+		}
+	}
+	else if (nChar == VK_BACK) {
+		if (line->GetLength() != 0) {
+			line->Erase();
+		}
+		else if (this->memo->GetRow() != 0 && line->GetLength() == 0) {
+			if (this->memo->GetLength() != 1) {
+				this->memo->RemoveLine(this->memo->GetLength() - 1);
+				Line *currentLineLink = this->memo->GetLine(this->memo->GetLength() - 1);
+				currentLineLink->SetColumn(currentLineLink->GetLength());
+			}
 		}
 	}
 }

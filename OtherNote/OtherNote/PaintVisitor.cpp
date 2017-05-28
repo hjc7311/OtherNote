@@ -64,7 +64,7 @@ void PaintVisitor::Visit(Memo *memo) {
 	CFont font;
 	font.CreatePointFont(instance->GetFontSize(), instance->GetFontFamily().c_str());
 	this->dc->SelectObject(&font);
-	RECT rect = { 0, 0, 1000, 1000 };	
+	RECT rect = { 0, 0, 2000, 2000 };	
 																	
 	//Long characterSize[26][3];
 	//Long i = 65;
