@@ -1,12 +1,11 @@
 // MakeStringVisitor.h
 
-#ifndef MAKESTRINGVISITOR_H
+#ifndef MAKESTRINGSVISITOR_H
 #define MAKESTRINGSVISITOR_H
 
 #include "Visitor.h"
 #include <string>
 using namespace std;
-
 
 class MakeStringVisitor : public Visitor {
 public:
@@ -14,17 +13,17 @@ public:
 	MakeStringVisitor(const MakeStringVisitor& soure);
 	virtual ~MakeStringVisitor();
 	MakeStringVisitor& operator=(const MakeStringVisitor& soure);
+	virtual void Visit(Memo *memo);
+	virtual void Visit(Line *line);
 	virtual void Visit(SingleCharacter *singleCharacter);
 	virtual void Visit(DoubleCharacter *doubleCharacter);
-	virtual void Visit(Line *line);
-	virtual void Visit(Memo *memo);
-	string& GetStr() const;
+	string& GetCompleteString() const;
 private:
-	string str;
+	string completeString;
 };
 
-inline string& MakeStringVisitor::GetStr() const{
-	return const_cast<string&>(this->str);
+inline string& MakeStringVisitor::GetCompleteString() const{
+	return const_cast<string&>(this->completeString);
 }
 
-#endif	//MakeStringVisitor.h
+#endif	//_MAKESTRINGVISITOR_H

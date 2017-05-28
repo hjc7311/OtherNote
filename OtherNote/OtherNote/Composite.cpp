@@ -8,6 +8,17 @@ Composite::Composite(Long capacity)
 	this->length = 0;
 }
 
+Composite::Composite(const Composite& source)
+	: contents(source.capacity) {
+	Long i = 0;
+	while (i < source.capacity) {
+		this->contents.Store(i, (const_cast<Composite&>(source)).contents.GetAt(i)->Clone());
+		i++;
+	}
+	this->capacity = source.capacity;
+	this->length = source.length;
+}
+
 Composite::~Composite() {
 	Long i = 0;
 	while (i < this->length) {
@@ -24,17 +35,6 @@ Contents* Composite::GetAt(Long index) {
 
 Contents* Composite::operator[](Long index) {
 	return this->contents[index];
-}
-
-Composite::Composite(const Composite& source)
-	:contents(source.capacity) {
-	Long i = 0;
-	while (i < source.capacity) {
-		this->contents.Store(i, (const_cast<Composite&>(source)).contents.GetAt(i)->Clone());
-		i++;
-	}
-	this->capacity = source.capacity;
-	this->length = source.length;
 }
 
 Composite& Composite::operator=(const Composite& source) {
@@ -77,13 +77,17 @@ Long Composite::Remove(Long index) {
 	return index;
 }
 
-ArrayIterator<Contents*>* Composite::CreateIterator() const {
-	
-	//return const_cast<ArrayIterator<Contents*>*>(new ArrayIterator<Contents*>(const_cast<ArrayIterator<Contents*>>(&this->contents)));
-	
-	//ArrayIterator<Item>::ArrayIterator(Array<Item> *aArray);
+Iterator<Contents*>* Composite::CreateIterator() const {
+	return 0;
+}	//????????????????????????????
 
-	return const_cast<ArrayIterator<Contents*>*>(new ArrayIterator<Contents*>(&this->contents));
-
-	//return new ArrayIterator<Contents*>(const_cast<Contents*>(&this->contents));
-}
+//ArrayIterator<Contents*>* Composite::CreateIterator() const {
+//	
+//	//return const_cast<ArrayIterator<Contents*>*>(new ArrayIterator<Contents*>(const_cast<ArrayIterator<Contents*>>(&this->contents)));
+//	
+//	//ArrayIterator<Item>::ArrayIterator(Array<Item> *aArray);
+//
+//	return const_cast<ArrayIterator<Contents*>*>(new ArrayIterator<Contents*>(&this->contents));
+//
+//	//return new ArrayIterator<Contents*>(const_cast<Contents*>(&this->contents));
+//}

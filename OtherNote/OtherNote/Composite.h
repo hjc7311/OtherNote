@@ -5,9 +5,10 @@
 #define _COMPOSITE_H
 
 #include "Contents.h"
+#include "Iterator.h"
 #include "Array.h"
 
-class Composite :public Contents {
+class Composite : public Contents {
 public:
 	Composite(Long capacity);
 	Composite(const Composite& source);
@@ -19,7 +20,7 @@ public:
 	Contents* operator[](Long index);
 	Long GetCapacity() const;
 	Long GetLength() const;
-	virtual ArrayIterator<Contents*>* CreateIterator() const;
+	virtual Iterator<Contents*>* CreateIterator() const = 0;
 protected:
 	Array<Contents*> contents;
 	Long capacity;

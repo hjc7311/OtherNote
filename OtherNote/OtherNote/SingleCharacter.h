@@ -5,23 +5,20 @@
 
 #include "Character.h"
 
-typedef signed long int Long;
-
-class SingleCharacter:public Character {
-public :
+class SingleCharacter : public Character {
+public:
 	SingleCharacter();
 	SingleCharacter(char value, Long width, Long height);
+	SingleCharacter(const SingleCharacter& source);
 	virtual ~SingleCharacter();
+	SingleCharacter& operator=(const SingleCharacter& source);
+	//bool IsEqual(const SingleCharacter& other);
+	//bool IsNotEqual(const SingleCharacter& other);
+	//bool operator==(const SingleCharacter& other);
+	//bool operator!=(const SingleCharacter& other);
+	char GetValue() const;
 	virtual Contents* Clone() const;
 	virtual void Accept(Visitor *visitor);
-	SingleCharacter(const SingleCharacter& source);
-	SingleCharacter& operator=(const SingleCharacter& source);
-	bool IsEqual(const SingleCharacter& other);
-	bool IsNotEqual(const SingleCharacter& other);
-	bool operator==(const SingleCharacter& other);
-	bool operator!=(const SingleCharacter& other);
-	char GetValue() const;
-	virtual ArrayIterator<Contents*>* CreateIterator() const;
 private:
 	char value;
 };
