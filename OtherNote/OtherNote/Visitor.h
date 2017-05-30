@@ -14,8 +14,8 @@ public:
 	virtual ~Visitor() = 0;
 	Visitor(const Visitor& source);
 	Visitor& operator=(const Visitor& source);
-	virtual void Visit(Line *line) = 0;
 	virtual void Visit(Memo *memo) = 0;
+	virtual void Visit(Line *line) = 0;
 	virtual void Visit(SingleCharacter *singleCharacter) = 0;
 	virtual void Visit(DoubleCharacter *doubleCharaceter) = 0;
 };

@@ -18,18 +18,18 @@ Visitor& Visitor::operator=(const Visitor& source) {
 	return *this;
 }
 
+void Visitor::Visit(Memo *memo) {
+
+}
+
+void Visitor::Visit(Line *line) {
+
+}
+
 void Visitor::Visit(SingleCharacter *singleCharacter) {
 
 }
 
 void Visitor::Visit(DoubleCharacter *doubleCharacter) {
 
-}
-
-void Visitor::Visit(Memo *memo) {
-
-}
-
-void Visitor::Visit(Line *line) {
-	
 }

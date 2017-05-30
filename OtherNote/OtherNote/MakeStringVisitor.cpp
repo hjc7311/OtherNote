@@ -1,13 +1,11 @@
 // MakeStringVisitor.cpp
 
 #include "MakeStringVisitor.h"
-#include "Line.h"
 #include "Memo.h"
+#include "Line.h"
 #include "SingleCharacter.h"
 #include "DoubleCharacter.h"
 #include "ArrayIterator.h"
-
-typedef signed long int Long;
 
 MakeStringVisitor::MakeStringVisitor(){
 	this->completeString = "";
@@ -18,26 +16,41 @@ MakeStringVisitor::MakeStringVisitor(const MakeStringVisitor& source){
 }
 
 MakeStringVisitor::~MakeStringVisitor(){
+
 }
 
 MakeStringVisitor& MakeStringVisitor::operator=(const MakeStringVisitor& source){
 	this->completeString = source.completeString;
+	
 	return *this;
 }
 
-void MakeStringVisitor::Visit(SingleCharacter *singleCharacter){
-}
+void MakeStringVisitor::Visit(Memo *memo) {
+	ArrayIterator<Contents*> *memoIterator = memo->CreateIterator();
+	
+	memoIterator->First();
+	while (!memoIterator->IsDone()) {
+		MakeStringVisitor makeStringVisitor;
+		static_cast<Line*>(memoIterator->CurrentItem())->Accept(&makeStringVisitor);
 
-void MakeStringVisitor::Visit(DoubleCharacter *doubleCharacter){
+		this->completeString += makeStringVisitor.GetCompleteString();
+		this->completeString += "\r\n";
+
+		memoIterator->Next();
+	}
+
+	if (memoIterator != 0) {
+		delete memoIterator;
+		memoIterator = 0;
+	}
 }
 
 void MakeStringVisitor::Visit(Line *line) {
 	ArrayIterator<Contents*> *lineIterator = line->CreateIterator();
-	Character *characterLink;
-
+	
 	lineIterator->First();
-	while (lineIterator->IsDone() != true) {
-		characterLink = static_cast<Character*>(lineIterator->CurrentItem());
+	while (!lineIterator->IsDone()) {
+		Character *characterLink = static_cast<Character*>(lineIterator->CurrentItem());
 		if (dynamic_cast<SingleCharacter*>(characterLink)) {
 			this->completeString += dynamic_cast<SingleCharacter*>(characterLink)->GetValue();
 		}
@@ -54,16 +67,8 @@ void MakeStringVisitor::Visit(Line *line) {
 	}
 }
 
-void MakeStringVisitor::Visit(Memo *memo){
-	ArrayIterator<Contents*> *memoIterator = memo->CreateIterator();
-	memoIterator->First();
-	while (memoIterator->IsDone() != true) {
-		MakeStringVisitor makeStringVisitor;
-		static_cast<Line*>(memoIterator->CurrentItem())->Accept(&makeStringVisitor);
-		
-		this->completeString += makeStringVisitor.GetCompleteString();
-		this->completeString += '\n';
+void MakeStringVisitor::Visit(SingleCharacter *singleCharacter) {
+}
 
-		memoIterator->Next();
-	}
+void MakeStringVisitor::Visit(DoubleCharacter *doubleCharacter) {
 }

@@ -8,6 +8,17 @@ Composite::Composite(Long capacity)
 	this->length = 0;
 }
 
+Composite::Composite(const Composite& source)
+	: contents(source.capacity) {
+	Long i = 0;
+	while (i < source.length) {
+		this->contents.Store(i, (const_cast<Composite&>(source)).contents.GetAt(i)->Clone());
+		i++;
+	}
+	this->capacity = source.capacity;
+	this->length = source.length;
+}
+
 Composite::~Composite() {
 	Long i = 0;
 	while (i < this->length) {
@@ -18,29 +29,12 @@ Composite::~Composite() {
 	}
 }
 
-Contents* Composite::GetAt(Long index) {
-	return this->contents.GetAt(index);
-}
-
-Contents* Composite::operator[](Long index) {
-	return this->contents[index];
-}
-
-Composite::Composite(const Composite& source)
-	:contents(source.capacity) {
-	Long i = 0;
-	while (i < source.capacity) {
-		this->contents.Store(i, (const_cast<Composite&>(source)).contents.GetAt(i)->Clone());
-		i++;
-	}
-	this->capacity = source.capacity;
-	this->length = source.length;
-}
-
 Composite& Composite::operator=(const Composite& source) {
 	Long i = 0;
 	while (i < this->length) {
-		delete this->contents.GetAt(i);
+		if (this->contents.GetAt(i) != 0) {
+			delete this->contents.GetAt(i);
+		}
 		i++;
 	}
 
@@ -71,6 +65,7 @@ Long Composite::Insert(Long index, Contents *contents) {
 	index = this->contents.Insert(index, contents);
 	this->capacity++;
 	this->length++;
+
 	return index;
 }
 
@@ -81,16 +76,22 @@ Long Composite::Remove(Long index) {
 	index = this->contents.Delete(index);
 	this->capacity--;
 	this->length--;
+
 	return index;
 }
 
-ArrayIterator<Contents*>* Composite::CreateIterator() const {
-	
-	//return const_cast<ArrayIterator<Contents*>*>(new ArrayIterator<Contents*>(const_cast<ArrayIterator<Contents*>>(&this->contents)));
-	
-	//ArrayIterator<Item>::ArrayIterator(Array<Item> *aArray);
-
-	return const_cast<ArrayIterator<Contents*>*>(new ArrayIterator<Contents*>(&this->contents));
-
-	//return new ArrayIterator<Contents*>(const_cast<Contents*>(&this->contents));
+Contents* Composite::GetAt(Long index) {
+	return this->contents.GetAt(index);
 }
+
+Contents* Composite::operator[](Long index) {
+	return this->contents[index];
+}
+
+//Contents* Composite::operator+(Long index) {
+//	return this->contents + index;
+//}
+
+//ArrayIterator<Contents*>* Composite::CreateIterator() const {
+//	return const_cast<ArrayIterator<Contents*>*>(new ArrayIterator<Contents*>(&this->contents));
+//}

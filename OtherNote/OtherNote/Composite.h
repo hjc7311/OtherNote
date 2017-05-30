@@ -6,6 +6,7 @@
 
 #include "Contents.h"
 #include "Array.h"
+#include "ArrayIterator.h"
 
 class Composite :public Contents {
 public:
@@ -18,9 +19,10 @@ public:
 	virtual Contents* GetAt(Long index);
 	Composite& operator=(const Composite& source);
 	Contents* operator[](Long index);
+	//Contents* operator+(Long index);
 	Long GetCapacity() const;
 	Long GetLength() const;
-	virtual ArrayIterator<Contents*>* CreateIterator() const;
+	virtual ArrayIterator<Contents*>* CreateIterator() const = 0;
 protected:
 	Array<Contents*> contents;
 	Long capacity;

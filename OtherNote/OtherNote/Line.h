@@ -6,31 +6,27 @@
 
 #include "Composite.h"
 
-#include <string>
-using namespace std;
-
-class Visitor;
 class Character;
 class Line : public Composite {
 public:
 	Line(Long capacity = 256);
 	Line(const Line& source);
 	virtual ~Line();
-	virtual Contents* Clone() const;
 	Line& operator=(const Line& source);
 	Long Write(char value);
 	Long Write(char *value);
 	Long Erase();
 	Character* GetCharacter(Long index);
 	Character* operator[](Long index);
-	void Accept(Visitor* visitor);
 	Long GetColumn() const;
-	void SetColumn(Long index);
-	Long MoveLeftColumn();
-	Long MoveRightColumn();
-//	string MakeLineString();
-//	void Accept(Visitor* visitor);
-//	virtual ArrayIterator<Contents*>* CreateIterator() const;
+	virtual Contents* Clone() const;
+	void Accept(Visitor* visitor);
+	virtual ArrayIterator<Contents*>* CreateIterator() const;
+	Long MoveFirstColumn();
+	Long MovePreviousColumn();
+	Long MoveNextColumn();
+	Long MoveLastColumn();
+	//void SetColumn(Long index);
 private:
 	Long column;
 };

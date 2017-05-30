@@ -5,31 +5,28 @@
 #define _MEMO_H
 
 #include "Composite.h"
-#include "Iterator.h"
-#include <string>
-using namespace std;
 
-class Visitor;
 class Line;
 class Memo :public Composite {
 public:
 	Memo(Long capacity = 250);
 	Memo(const Memo& source);
 	virtual ~Memo();
-	virtual Contents* Clone() const;
 	Memo& operator=(const Memo& source);
 	Long AddLine();
-	Long InsertLine(Long index);
-	Long RemoveLine(Long index);
+	Long InsertLine();
+	Long RemoveLine();
 	Line* GetLine(Long index);
 	Line* operator[](Long index);
 	Long GetRow() const;
-	void SetRow(Long index);
+	virtual Contents* Clone() const;
 	void Accept(Visitor* visitor);
-	void MoveUpRow();
-	void MoveDownRow();
-//	virtual ArrayIterator<Contents*>* CreateIterator() const;
-	//string MakeMemoString();
+	virtual ArrayIterator<Contents*>* CreateIterator() const;
+	Long MoveFirstRow();
+	Long MovePreviousRow();
+	Long MoveNextRow();
+	Long MoveLastRow();
+	//void SetRow(Long index);
 private:
 	Long row;
 };
