@@ -51,4 +51,5 @@ void BackspaceKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	//		currentLineLink->MovePreviousColumn();
 	//	}
 	//}
+	this->otherNoteForm->RedrawWindow();
 }

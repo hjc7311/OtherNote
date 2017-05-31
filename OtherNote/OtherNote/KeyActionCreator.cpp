@@ -19,6 +19,7 @@
 #include "CtrlHomeKey.h"
 #include "CtrlEndKey.h"
 #include "BackspaceKey.h"
+#include "DeleteKey.h"
 
 KeyActionCreator::KeyActionCreator() {
 
@@ -51,6 +52,9 @@ KeyAction* KeyActionCreator::Create(OtherNoteForm *otherNoteForm, UINT nChar, UI
 	}
 	else if (nChar == VK_BACK) {
 		return new BackspaceKey(otherNoteForm);
+	}
+	else if (nChar == VK_DELETE) {
+		return new DeleteKey(otherNoteForm);
 	}
 
 	//else if (nChar == VK_TAB) {

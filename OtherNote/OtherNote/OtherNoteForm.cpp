@@ -112,12 +112,14 @@ void OtherNoteForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	else if (nChar == VK_TAB) {
 		lineLink->Write('\t');
 		caret->MoveNextTab();
+		this->RedrawWindow();//VK_TAB안에 추가?
 	}
-	else if (nChar >= 32 && nChar <= 126){// && nChar != VK_BACK){
+	else if (nChar >= 32 && nChar <= 126) {// && nChar != VK_BACK){
 		lineLink->Write(nChar);
 		caret->MoveNextCharacter();
+		this->RedrawWindow();//ascii 안에 추가?
 	}
-	this->RedrawWindow();	
+	//this->RedrawWindow();//해당 부분 삭제?
 }
 
 LRESULT OtherNoteForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
@@ -169,7 +171,8 @@ void OtherNoteForm::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 		KeyAction *keyAction = keyActionCreator.Create(this, nChar, nRepCnt, nFlags);
 		if (keyAction != 0) {
 			keyAction->OnKeyDown(nChar, nRepCnt, nFlags);
-		}	
+		}
+		//this->RedrawWindow();
 }
 /*
 void OtherNoteForm::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
