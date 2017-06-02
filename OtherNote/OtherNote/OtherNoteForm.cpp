@@ -19,6 +19,9 @@ BEGIN_MESSAGE_MAP(OtherNoteForm, CFrameWnd)
 	ON_WM_CHAR()
 	ON_MESSAGE(WM_IME_COMPOSITION, OnImeComposition)
 	ON_WM_KEYDOWN()
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
 END_MESSAGE_MAP()
 
 OtherNoteForm::OtherNoteForm() {
@@ -69,7 +72,9 @@ void OtherNoteForm::OnClose() {
 
 void OtherNoteForm::OnPaint() {
 	CPaintDC dc(this);
-	CRect rect = { 0,0,2000,2000 };
+	//CRect rect = { 0,0,2000,2000 };
+	CRect rect;
+	GetClientRect(&rect);
 	PaintVisitor paintVisitor(&dc, &rect);
 	
 	this->memo->Accept(&paintVisitor);
@@ -77,49 +82,16 @@ void OtherNoteForm::OnPaint() {
 
 
 void OtherNoteForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
-	
-	Line *lineLink = this->memo->GetLine(this->memo->GetRow());
+	if (nChar >= 32 && nChar <= 126) {
+		Line *line = this->memo->GetLine(this->memo->GetRow());
+		line->Write(nChar);
 
-	Caret *caret = Caret::Instance(this);
-
-	if (nChar == VK_RETURN) {
-		/*
-		if(lineLink->GetColumn() == lineLink->GetLength()) {
-			this->memo->AddLine();
-			//caret->MoveNextLine();
-		}
-		else {
-//			Long index = this->memo->InsertLine(this->memo->GetRow()+1);
-			Long index = this->memo->InsertLine();
-			Line *newLine = this->memo->GetLine(index);
-			Line *line = this->memo->GetLine(index-1);
-
-			Long i = 0;
-			Long count = line->GetLength() - line->GetColumn();
-			while(i < count ) {
-				newLine->Add(line->GetCharacter(line->GetColumn())->Clone());
-				newLine->SetColumn(this->memo->GetLine(index)->GetColumn()+1);
-				line->SetColumn(line->GetColumn()+1);
-				line->Erase();
-				i++;
-			}
-			newLine->SetColumn(0);			//this->memo->SetRow(this->memo->GetRow()+1);
-			//Long index = this->memo->InsertLine(this->memo->GetRow());
-		}
-		caret->MoveNextLine();*/
-	}
-
-	else if (nChar == VK_TAB) {
-		lineLink->Write('\t');
-		caret->MoveNextTab();
-		this->RedrawWindow();//VK_TAB안에 추가?
-	}
-	else if (nChar >= 32 && nChar <= 126) {// && nChar != VK_BACK){
-		lineLink->Write(nChar);
+		Caret *caret = Caret::Instance(this);
 		caret->MoveNextCharacter();
-		this->RedrawWindow();//ascii 안에 추가?
+
 	}
-	//this->RedrawWindow();//해당 부분 삭제?
+	this->RedrawWindow();
+
 }
 
 LRESULT OtherNoteForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
@@ -171,9 +143,33 @@ void OtherNoteForm::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 		KeyAction *keyAction = keyActionCreator.Create(this, nChar, nRepCnt, nFlags);
 		if (keyAction != 0) {
 			keyAction->OnKeyDown(nChar, nRepCnt, nFlags);
-		}
-		//this->RedrawWindow();
+			delete keyAction;
+			keyAction = 0;
+		}	
 }
+#include "Mouse.h"
+void OtherNoteForm::OnMouseMove(UINT nFlags, CPoint point) {
+	//UNREFERENCED_PARAMETER(nFlags);
+	//UNREFERENCED_PARAMETER(point);
+	
+	Mouse mouse(this);
+	mouse.OnMouseMove(nFlags, point);
+
+}
+
+void OtherNoteForm::OnLButtonDown(UINT nFlags, CPoint point) {
+	Mouse mouse(this);
+	mouse.OnLButtonDown(nFlags, point);
+	
+}
+
+void OtherNoteForm::OnLButtonUp(UINT nFlags, CPoint point) {
+	//CRect rect(20, 20, 210, 210);
+	//Invalidate();
+	//this->UpdateWindow();
+
+}
+
 /*
 void OtherNoteForm::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	Line *line = this->memo->GetLine(this->memo->GetRow());

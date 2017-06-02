@@ -81,7 +81,7 @@ Long Memo::MoveNextRow() {
 }
 
 Long Memo::MoveLastRow() {
-	this->row = this->length;
+	this->row = this->length - 1;
 	return this->row;
 }
 

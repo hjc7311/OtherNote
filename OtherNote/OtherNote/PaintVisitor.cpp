@@ -50,7 +50,9 @@ void PaintVisitor::Visit(Memo *memo) {
 	CFont font;
 	font.CreatePointFont(characterFaces->GetFontSize(), characterFaces->GetFontFamily().c_str());
 	this->dc->SelectObject(&font);
-	
+
+//	this->dc->TabbedTextOut(0, 0, makeStringVisitor.GetCompleteString().c_str(), 8, 0, 0);
+//	this->dc->TextOut(0,0, makeStringVisitor.GetCompleteString().c_str());
 	this->dc->DrawText(CString(makeStringVisitor.GetCompleteString().c_str()), this->rect, DT_EDITCONTROL | DT_WORDBREAK | DT_LEFT | DT_EXPANDTABS);
 }
 

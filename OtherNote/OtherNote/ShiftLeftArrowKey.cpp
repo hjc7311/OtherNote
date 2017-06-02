@@ -1,23 +1,23 @@
-//LeftArrowKey.cpp
+//ShiftLeftArrowKey.cpp
 
-#include "LeftArrowKey.h"
+#include "ShiftLeftArrowKey.h"
 #include "OtherNoteForm.h"
 
-LeftArrowKey::LeftArrowKey(OtherNoteForm *otherNoteForm)
+ShiftLeftArrowKey::ShiftLeftArrowKey(OtherNoteForm *otherNoteForm)
 	:KeyAction(otherNoteForm) {
 
 }
 
-LeftArrowKey::LeftArrowKey(const LeftArrowKey& source)
+ShiftLeftArrowKey::ShiftLeftArrowKey(const ShiftLeftArrowKey& source)
 	: KeyAction(source) {
 
 }
 
-LeftArrowKey::~LeftArrowKey() {
+ShiftLeftArrowKey::~ShiftLeftArrowKey() {
 
 }
 
-LeftArrowKey& LeftArrowKey::operator=(const LeftArrowKey& source) {
+ShiftLeftArrowKey& ShiftLeftArrowKey::operator=(const ShiftLeftArrowKey& source) {
 	KeyAction::operator=(source);
 
 	return *this;
@@ -26,7 +26,10 @@ LeftArrowKey& LeftArrowKey::operator=(const LeftArrowKey& source) {
 #include "Caret.h"
 #include "Memo.h"
 #include "Line.h"
-void LeftArrowKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
+#include "Character.h"
+#include "SingleCharacter.h"
+#include "DoubleCharacter.h"
+void ShiftLeftArrowKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	Memo *memo = this->otherNoteForm->GetMemo();
 	Line *line = memo->GetLine(memo->GetRow());
 

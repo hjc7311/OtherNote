@@ -64,6 +64,12 @@ void Caret::Move(Long xPosition, Long yPosition) {
 	CWnd::SetCaretPos(CPoint(this->xPosition, this->yPosition));
 }
 
+void Caret::MoveFirstCharacter() {
+	this->xPosition = 0;
+
+	CWnd::SetCaretPos(CPoint(this->xPosition, this->yPosition));
+}
+
 void Caret::MovePreviousCharacter() {
 	Memo *memo = this->otherNoteForm->GetMemo();
 	Line *line = memo->GetLine(memo->GetRow());
@@ -86,6 +92,30 @@ void Caret::MoveNextCharacter() {
 	CWnd::SetCaretPos(CPoint(this->xPosition, this->yPosition));
 }
 
+void Caret::MoveLastCharacter() {
+	Memo *memo = this->otherNoteForm->GetMemo();
+	Line *line = memo->GetLine(memo->GetRow());
+
+
+	Long moveWidth = 0;
+	Long i = 0;
+	while (i < line->GetLength()) {
+		moveWidth += line->GetCharacter(i)->GetWidth();
+		i++;
+	}
+	this->xPosition = moveWidth;
+
+	CWnd::SetCaretPos(CPoint(this->xPosition, this->yPosition));
+}
+
+void Caret::MoveFirstLine() {
+	this->xPosition = 0;
+	this->yPosition = 0;
+
+	CWnd::SetCaretPos(CPoint(this->xPosition, this->yPosition));
+}
+
+
 void Caret::MovePreviousLine() {
 	this->xPosition = 0;
 	this->yPosition -= this->height;
@@ -100,10 +130,20 @@ void Caret::MoveNextLine() {
 	CWnd::SetCaretPos(CPoint(this->xPosition, this->yPosition));
 }
 
+void Caret::MoveLastLine() {
+	Memo *memo = this->otherNoteForm->GetMemo();
+	Line *line = memo->GetLine(memo->GetRow());
+
+	this->xPosition = 0;
+	this->yPosition = this->height * memo->GetRow();
+
+	CWnd::SetCaretPos(CPoint(this->xPosition, this->yPosition));
+}
+
 void Caret::MovePreviousTab() {
 	CharacterFaces *characterFaces = CharacterFaces::Instance(0);
-	Long tabWidth = characterFaces->GetCharacterSize(97).GetWidth() * 8;
-
+	Long tabWidth = characterFaces->GetCharacterSize(98).GetWidth() * 8;
+	
 	Long moveWidth = this->xPosition%tabWidth;
 	this->xPosition -= moveWidth;
 
@@ -112,9 +152,9 @@ void Caret::MovePreviousTab() {
 
 void Caret::MoveNextTab() {
 	CharacterFaces *characterFaces = CharacterFaces::Instance(0);
-	Long tabWidth = characterFaces->GetCharacterSize(97).GetWidth() * 8;
+	Long tabWidth = characterFaces->GetCharacterSize(98).GetWidth() * 8;
 
-	Long moveWidth = tabWidth - (this->xPosition%tabWidth);
+	Long moveWidth = tabWidth - (this->xPosition % tabWidth);
 	this->xPosition += moveWidth;
 
 	CWnd::SetCaretPos(CPoint(this->xPosition, this->yPosition));

@@ -23,6 +23,7 @@ DeleteKey& DeleteKey::operator=(const DeleteKey& source) {
 #include "Memo.h"
 #include "Line.h"
 #include "Caret.h"
+#include "Character.h"
 
 void DeleteKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	Memo *memo = this->otherNoteForm->GetMemo();
@@ -30,15 +31,28 @@ void DeleteKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 
 	Caret *caret = Caret::Instance(this->otherNoteForm);
 
-	if (line->GetLength() != 0 && line->GetColumn() < line->GetLength()) {
+	if (line->GetLength() > 0 && line->GetColumn() < line->GetLength()) {
 		line->MoveNextColumn();
 		line->Erase();
 	}
-	else if (memo->GetRow() != 0) {
-		if (memo->GetLength() > 1) {
+	else if (memo->GetRow() + 1 < memo->GetLength()){
+		if (line->GetLength() == 0) {
 			memo->RemoveLine();
-			//line->MovePreviousColumn();
-			//caret->MovePreviousCharacter();
+			memo->MoveNextRow();
+			line = memo->GetLine(memo->GetRow());
+			line->MoveFirstColumn();
+		}
+		else {
+			Line *lineToCopy = memo->GetLine(memo->GetRow() + 1);
+			//Iterator·Î º¯°æ
+			Long i = 0;
+			while (i < lineToCopy->GetLength()) {
+				Contents *contents = lineToCopy->GetCharacter(i)->Clone();
+				line->Add(contents);
+				i++;
+			}
+			memo->MoveNextRow();
+			memo->RemoveLine();
 		}
 	}
 	this->otherNoteForm->RedrawWindow();

@@ -12,10 +12,14 @@ public:
 	~Caret();
 	static Caret* Instance(OtherNoteForm *otherNoteForm);
 	void Move(Long xPosition, Long yPosition);
+	void MoveFirstCharacter();
 	void MovePreviousCharacter();
 	void MoveNextCharacter();
+	void MoveLastCharacter();
+	void MoveFirstLine();
 	void MovePreviousLine();
 	void MoveNextLine();
+	void MoveLastLine();
 	void MovePreviousTab();
 	void MoveNextTab();
 	bool ChangeCaret();

@@ -1,23 +1,23 @@
-//DownArrowKey.cpp
+//ShiftDownArrowKey.cpp
 
-#include "DownArrowKey.h"
+#include "ShiftDownArrowKey.h"
 #include "OtherNoteForm.h"
 
-DownArrowKey::DownArrowKey(OtherNoteForm *otherNoteForm)
+ShiftDownArrowKey::ShiftDownArrowKey(OtherNoteForm *otherNoteForm)
 	:KeyAction(otherNoteForm) {
 
 }
 
-DownArrowKey::DownArrowKey(const DownArrowKey& source)
+ShiftDownArrowKey::ShiftDownArrowKey(const ShiftDownArrowKey& source)
 	: KeyAction(source) {
 
 }
 
-DownArrowKey::~DownArrowKey() {
+ShiftDownArrowKey::~ShiftDownArrowKey() {
 
 }
 
-DownArrowKey& DownArrowKey::operator=(const DownArrowKey& source) {
+ShiftDownArrowKey& ShiftDownArrowKey::operator=(const ShiftDownArrowKey& source) {
 	KeyAction::operator=(source);
 
 	return *this;
@@ -27,12 +27,12 @@ DownArrowKey& DownArrowKey::operator=(const DownArrowKey& source) {
 #include "Memo.h"
 #include "Line.h"
 #include "Character.h"
-void DownArrowKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
+void ShiftDownArrowKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	Memo *memo = this->otherNoteForm->GetMemo();
 
 	Caret *caret = Caret::Instance(this->otherNoteForm);
 
-	if (memo->GetRow() < memo->GetLength()-1) {
+	if (memo->GetRow() < memo->GetLength() - 1) {
 		Long originalXPosition = caret->GetXPosition();
 
 		caret->MoveNextLine();
@@ -40,7 +40,6 @@ void DownArrowKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 		Line *line = memo->GetLine(memo->GetRow());
 		line->MoveFirstColumn();
 
-		//Long previousWidth = -1;
 		Long previousWidth = 0;
 		Long currentWidth = 0;
 		while (currentWidth < originalXPosition && line->GetColumn() < line->GetLength()) {

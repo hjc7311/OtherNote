@@ -51,11 +51,12 @@ void UpArrowKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 		}
 
 		Long resultWidth;
-		if (currentWidth - originalXPosition < originalXPosition - previousWidth) {
+		if (currentWidth - originalXPosition <= originalXPosition - previousWidth) {
 			resultWidth = currentWidth;
 		}
 		else {
 			resultWidth = previousWidth;
+			line->MovePreviousColumn();
 		}
 
 		caret->Move(resultWidth, caret->GetYPosition());

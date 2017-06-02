@@ -23,33 +23,44 @@ BackspaceKey& BackspaceKey::operator=(const BackspaceKey& source) {
 #include "Memo.h"
 #include "Line.h"
 #include "Caret.h"
+#include "Character.h"
+
 void BackspaceKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	Memo *memo = this->otherNoteForm->GetMemo();
 	Line *line = memo->GetLine(memo->GetRow());
 
 	Caret *caret = Caret::Instance(this->otherNoteForm);
 
-	if (line->GetLength() != 0) {
+	if (line->GetLength() != 0 && line->GetColumn() != 0) {
 		caret->MovePreviousCharacter();
 		line->Erase();		
 	}
 	else if (memo->GetRow() != 0) {
-		if (memo->GetLength() > 1) {
-			memo->RemoveLine();			
-			line->MovePreviousColumn();
-			//caret->MovePreviousCharacter();
+		if (line->GetLength() == 0) {
+			memo->RemoveLine();
+			caret->MoveLastLine();
+			caret->MoveLastCharacter();
+		}
+		else {
+			Line *lineToCopy = memo->GetLine(memo->MovePreviousRow());
+			//Iterator·Î º¯°æ
+			Long i = 0;
+			while (i < line->GetLength()) {
+				Contents *contents = line->GetCharacter(i)->Clone();
+				lineToCopy->Add(contents);	
+				i++;
+			}
+
+			memo->MoveNextRow();
+			memo->RemoveLine();
+			caret->MoveLastLine();
+			caret->MoveLastCharacter();
+			Long j = 0;
+			while (j < i) {
+				caret->MovePreviousCharacter();
+				j++;
+			}
 		}
 	}
-	//if (line->GetLength() != 0) {
-	//	line->Erase();
-	//}
-	//else if (memo->GetRow() != 0 && line->GetLength() == 0) {
-	//	if (memo->GetLength() != 1) {
-	//		memo->RemoveLine();
-	//		Line *currentLineLink = memo->GetLine(memo->GetLength() - 1);
-	//		//currentLineLink->SetColumn(currentLineLink->GetLength());
-	//		currentLineLink->MovePreviousColumn();
-	//	}
-	//}
 	this->otherNoteForm->RedrawWindow();
 }

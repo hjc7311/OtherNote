@@ -1,23 +1,23 @@
-//RightArrowKey.cpp
+//ShiftRightArrowKey.cpp
 
-#include "RightArrowKey.h"
+#include "ShiftRightArrowKey.h"
 #include "OtherNoteForm.h"
 
-RightArrowKey::RightArrowKey(OtherNoteForm *otherNoteForm)
+ShiftRightArrowKey::ShiftRightArrowKey(OtherNoteForm *otherNoteForm)
 	:KeyAction(otherNoteForm) {
 
 }
 
-RightArrowKey::RightArrowKey(const RightArrowKey& source)
+ShiftRightArrowKey::ShiftRightArrowKey(const ShiftRightArrowKey& source)
 	: KeyAction(source) {
 
 }
 
-RightArrowKey::~RightArrowKey() {
+ShiftRightArrowKey::~ShiftRightArrowKey() {
 
 }
 
-RightArrowKey& RightArrowKey::operator=(const RightArrowKey& source) {
+ShiftRightArrowKey& ShiftRightArrowKey::operator=(const ShiftRightArrowKey& source) {
 	KeyAction::operator=(source);
 
 	return *this;
@@ -26,13 +26,16 @@ RightArrowKey& RightArrowKey::operator=(const RightArrowKey& source) {
 #include "Caret.h"
 #include "Memo.h"
 #include "Line.h"
-void RightArrowKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
+#include "Character.h"
+#include "SingleCharacter.h"
+#include "DoubleCharacter.h"
+void ShiftRightArrowKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	Memo *memo = this->otherNoteForm->GetMemo();
 	Line *line = memo->GetLine(memo->GetRow());
 
 	Caret *caret = Caret::Instance(this->otherNoteForm);
 
-	if (memo->GetRow() < memo->GetLength()-1 || line->GetColumn() < line->GetLength()) {
+	if (memo->GetRow() < memo->GetLength() - 1 || line->GetColumn() < line->GetLength()) {
 		if (line->GetColumn() < line->GetLength()) {
 			line->MoveNextColumn();
 			caret->MoveNextCharacter();
