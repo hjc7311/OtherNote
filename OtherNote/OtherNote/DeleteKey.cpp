@@ -36,7 +36,7 @@ void DeleteKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 		line->Erase();
 	}
 	else if (memo->GetRow() + 1 < memo->GetLength()){
-		if (line->GetLength() == 0) {
+		if (line->GetLength() == 0) {			
 			memo->RemoveLine();
 			memo->MoveNextRow();
 			line = memo->GetLine(memo->GetRow());

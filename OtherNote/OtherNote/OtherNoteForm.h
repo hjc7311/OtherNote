@@ -7,6 +7,8 @@
 using namespace std;
 
 class Memo;
+class HorizontalScroll;
+class VerticalScroll;
 class OtherNoteForm :public CFrameWnd {
 public:
 	OtherNoteForm();
@@ -23,11 +25,15 @@ protected:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 
 	DECLARE_MESSAGE_MAP()
 private:
 	Memo *memo;
 	bool endComposition;
+	HorizontalScroll *hScroll;
+	VerticalScroll *vScroll;
 };
 
 inline Memo* OtherNoteForm::GetMemo() const {

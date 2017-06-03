@@ -8,7 +8,7 @@ BackspaceKey::BackspaceKey(OtherNoteForm *otherNoteForm)
 }
 
 BackspaceKey::BackspaceKey(const BackspaceKey& source)
-	:KeyAction(source) {
+	: KeyAction(source) {
 }
 
 BackspaceKey::~BackspaceKey() {
@@ -33,33 +33,30 @@ void BackspaceKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 
 	if (line->GetLength() != 0 && line->GetColumn() != 0) {
 		caret->MovePreviousCharacter();
-		line->Erase();		
+		line->Erase();
 	}
 	else if (memo->GetRow() != 0) {
 		if (line->GetLength() == 0) {
+			caret->MovePreviousLine();
 			memo->RemoveLine();
-			caret->MoveLastLine();
+			memo->GetLine(memo->GetRow())->MoveLastColumn();
 			caret->MoveLastCharacter();
 		}
 		else {
 			Line *lineToCopy = memo->GetLine(memo->MovePreviousRow());
-			//Iterator·Î º¯°æ
+
+			caret->MovePreviousLine();
+			lineToCopy->MoveLastColumn();
+			caret->MoveLastCharacter();
+
 			Long i = 0;
 			while (i < line->GetLength()) {
 				Contents *contents = line->GetCharacter(i)->Clone();
-				lineToCopy->Add(contents);	
+				lineToCopy->Add(contents);
 				i++;
 			}
-
 			memo->MoveNextRow();
 			memo->RemoveLine();
-			caret->MoveLastLine();
-			caret->MoveLastCharacter();
-			Long j = 0;
-			while (j < i) {
-				caret->MovePreviousCharacter();
-				j++;
-			}
 		}
 	}
 	this->otherNoteForm->RedrawWindow();

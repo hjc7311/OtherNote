@@ -7,6 +7,8 @@
 #include "DoubleCharacter.h"
 #include "CharacterFaces.h"
 #include "MakeStringVisitor.h"
+#include "HorizontalScroll.h"
+#include "VerticalScroll.h"
 #include "Caret.h"
 #include <WinUser.h>
 #include <fstream>
@@ -22,6 +24,9 @@ BEGIN_MESSAGE_MAP(OtherNoteForm, CFrameWnd)
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
+	ON_WM_SIZE()
+	ON_WM_HSCROLL()
+	ON_WM_VSCROLL()
 END_MESSAGE_MAP()
 
 OtherNoteForm::OtherNoteForm() {
@@ -30,21 +35,45 @@ OtherNoteForm::OtherNoteForm() {
 
 BOOL OtherNoteForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 	CFrameWnd::OnCreate(lpCreateStruct);
-	
+
 	this->memo = new Memo;
-	
+
 	CPaintDC dc(this);
 	CharacterFaces *characterFaces = CharacterFaces::Instance(&dc);
-	
+
 	//this->Load();
-	
+
 	Caret *caret = Caret::Instance(this);
-	
+
 	this->endComposition = true;
-	
+
 	this->RedrawWindow();
 
 	return FALSE;
+}
+
+void OtherNoteForm::OnSize(UINT nType, int cx, int cy) {
+	this->hScroll = new HorizontalScroll(this);
+	this->vScroll = new VerticalScroll(this);
+	//CRect arect;
+	//this->GetClientRect(&arect);
+	//CRect rrect(arect.left, arect.bottom-20, arect.right, arect.bottom);
+	//scroll->Create(SBS_HORZ, rrect, this, 1);
+	////scroll->SetScrollRange(0, 100);
+	////scroll->SetScrollPos(0);
+	//SCROLLINFO  scrinfo; 
+	//scrinfo.cbSize = sizeof(scrinfo); 
+	//scrinfo.fMask = SIF_ALL; 
+	//scrinfo.nMin = 0;          // 최소값
+	//scrinfo.nMax = 100;      // 최대값 
+	//scrinfo.nPage = 50;      // 페이지단위 증가값 
+	//scrinfo.nTrackPos = 50;  // 트랙바가 움직일때의 위치값 
+	//scrinfo.nPos = 0;        // 위치 
+	//scroll->SetScrollInfo(&scrinfo); 
+	//scroll->ShowScrollBar(SB_BOTH);
+	/*this->dc = new CDC;
+	this->dc->CreateDCA("test", NULL, NULL, NULL);
+	this->dc->CreateCompatibleDC(this->dc);*/
 }
 
 void OtherNoteForm::OnClose() {
@@ -71,14 +100,35 @@ void OtherNoteForm::OnClose() {
 #include "ArrayIterator.h"
 
 void OtherNoteForm::OnPaint() {
+
 	CPaintDC dc(this);
-	//CRect rect = { 0,0,2000,2000 };
+	SCROLLINFO  scrinfo;
+	this->hScroll->GetScroll()->GetScrollInfo(&scrinfo);
+	//
+	//CScrollBar *csb=this->hScroll->GetScroll();
+	//csb->GetScrollBarInfo();
+	//
 	CRect rect;
-	GetClientRect(&rect);
-	PaintVisitor paintVisitor(&dc, &rect);
-	
+	this->GetClientRect(&rect);
+	CharacterFaces *characterFaces = CharacterFaces::Instance(0);
+	Long width = characterFaces->GetCharacterSize(97).GetWidth();
+	//CRect rrect(-100*(scrinfo.nPos), 0 ,5000, rect.bottom-20);
+	//this->GetClientRect(&rect);
+	CRect rrect(-((scrinfo.nPos)*width), rect.top, 5000, rect.bottom - 20);
+	PaintVisitor paintVisitor(&dc, &rrect);
+
 	this->memo->Accept(&paintVisitor);
 }
+
+//void OtherNoteForm::OnPaint() {
+//	CPaintDC dc(this);
+//	//CRect rect = { 0,0,2000,2000 };
+//	CRect rect;
+//	GetClientRect(&rect);
+//	PaintVisitor paintVisitor(&dc, &rect);
+//
+//	this->memo->Accept(&paintVisitor);
+//}
 
 
 void OtherNoteForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
@@ -108,7 +158,7 @@ LRESULT OtherNoteForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
 
 	Caret *caret = Caret::Instance(0);
 	caret->ChangeImeCaret();
-	
+
 	if (lParam & GCS_COMPSTR) {
 
 		if (this->endComposition == false) {
@@ -121,6 +171,7 @@ LRESULT OtherNoteForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
 		}
 		else {
 			this->endComposition = true;
+			caret->ChangeCaret();
 		}
 	}
 	if (lParam & GCS_RESULTSTR) {
@@ -139,19 +190,19 @@ LRESULT OtherNoteForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
 #include "KeyActionCreator.h"
 #include "KeyAction.h"
 void OtherNoteForm::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
-		KeyActionCreator keyActionCreator;
-		KeyAction *keyAction = keyActionCreator.Create(this, nChar, nRepCnt, nFlags);
-		if (keyAction != 0) {
-			keyAction->OnKeyDown(nChar, nRepCnt, nFlags);
-			delete keyAction;
-			keyAction = 0;
-		}	
+	KeyActionCreator keyActionCreator;
+	KeyAction *keyAction = keyActionCreator.Create(this, nChar, nRepCnt, nFlags);
+	if (keyAction != 0) {
+		keyAction->OnKeyDown(nChar, nRepCnt, nFlags);
+		delete keyAction;
+		keyAction = 0;
+	}
 }
 #include "Mouse.h"
 void OtherNoteForm::OnMouseMove(UINT nFlags, CPoint point) {
 	//UNREFERENCED_PARAMETER(nFlags);
 	//UNREFERENCED_PARAMETER(point);
-	
+
 	Mouse mouse(this);
 	mouse.OnMouseMove(nFlags, point);
 
@@ -160,7 +211,7 @@ void OtherNoteForm::OnMouseMove(UINT nFlags, CPoint point) {
 void OtherNoteForm::OnLButtonDown(UINT nFlags, CPoint point) {
 	Mouse mouse(this);
 	mouse.OnLButtonDown(nFlags, point);
-	
+
 }
 
 void OtherNoteForm::OnLButtonUp(UINT nFlags, CPoint point) {
@@ -171,103 +222,9 @@ void OtherNoteForm::OnLButtonUp(UINT nFlags, CPoint point) {
 }
 
 /*
-void OtherNoteForm::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
-	Line *line = this->memo->GetLine(this->memo->GetRow());
-	Caret *caret = Caret::Instance(this);
-
-	//row를 public이든, noteBookForm에서 멤버로 하나 가지고 있든
-	Long row = this->memo->GetRow();
-	Long column = line->GetColumn();
-	//
-	
-	if (nChar == VK_LEFT) {
-		if (column > 0) {
-			caret->MovePreviousCharacter();
-			line->MoveLeftColumn();
-		}
-	}
-
-	else if (nChar == VK_UP) {
-		if (row > 0) {
-			Long originalXPosition = caret->GetXPosition();
-
-			caret->MovePreviousLine();
-			this->memo->MoveUpRow();
-
-			line = this->memo->GetLine(this->memo->GetRow());
-			
-			//column = 0;
-			line->SetColumn(0);
-			Long previousWidth=-1;
-			Long currentWidth = 0;
-			while (currentWidth < originalXPosition && line->GetColumn()<line->GetLength()) {
-				previousWidth = currentWidth;
-				currentWidth+=line->GetCharacter(line->GetColumn())->GetWidth();
-				line->MoveRightColumn();
-			}
-
-			Long resultWidth;
-			if (currentWidth - originalXPosition < originalXPosition - previousWidth) {
-				resultWidth = currentWidth;
-			}
-			else {
-				resultWidth = previousWidth;
-			}
-
-			caret->Move(resultWidth, caret->GetYPosition());
-			//Long totalWidth = 0;
-			//column = 0;
-			//Long i = 0;
-			//Character *character = line->GetCharacter(column);
-			//while(column<line->GetLength() && )
-
-			//line = this->memo->GetLine(this->memo->GetRow());
-			//Long totalWidth = 0;
-			//Long i = 0;
-			//while (i < line->GetLength()) {
-			//	Character *character = line->GetCharacter(i);
-			//	totalWidth += character->GetWidth();
-			//	i++;
-			//}
-
-			//Long xPosition = 0;
-			//if (xPosition > totalWidth) {
-			//	xPosition = totalWidth;
-			//}
-			//else {
-
-			//}
-		}
-	}
-
-	else if (nChar == VK_DOWN) {
-		this->memo->MoveDownRow();
-		caret->MoveNextLine();
-	}
-
-	else if (nChar == VK_RIGHT) {
-		if (column < line->GetLength()) {
-			line->MoveRightColumn();
-			caret->MoveNextCharacter();
-		}
-	}
-	else if (nChar == VK_BACK) {
-		if (line->GetLength() != 0) {
-			line->Erase();
-		}
-		else if (this->memo->GetRow() != 0 && line->GetLength() == 0) {
-			if (this->memo->GetLength() != 1) {
-				this->memo->RemoveLine(this->memo->GetLength() - 1);
-				Line *currentLineLink = this->memo->GetLine(this->memo->GetLength() - 1);
-				currentLineLink->SetColumn(currentLineLink->GetLength());
-			}
-		}
-	}
-}
-
 void OtherNoteForm::Load() {
 	fstream fs("aha.txt", ios::in);
-	if(!fs.fail()) {
+	if (!fs.fail()) {
 		char buffer[10000];
 		fs.getline(buffer, sizeof(buffer));
 		CharacterFaces *characterFaces = CharacterFaces::Instance(0);
@@ -280,17 +237,17 @@ void OtherNoteForm::Load() {
 		char doubleCharacter[2];
 		Long j = 0;
 		fs.getline(buffer, sizeof(buffer));
-		while(!fs.eof()) {
+		while (!fs.eof()) {
 			line = this->memo->GetLine(j);
 			Long length = string(buffer).length();
 			Long i = 0;
-			while(i < length-1) {
-				if(buffer[i] >= 0 && buffer[i] <= 127){
+			while (i < length - 1) {
+				if (buffer[i] >= 0 && buffer[i] <= 127) {
 					line->Write(buffer[i]);
 				}
 				else {
 					doubleCharacter[0] = buffer[i];
-					doubleCharacter[1] = buffer[i+1];
+					doubleCharacter[1] = buffer[i + 1];
 					i++;
 					line->Write(doubleCharacter);
 				}
@@ -300,7 +257,7 @@ void OtherNoteForm::Load() {
 			j++;
 			fs.getline(buffer, sizeof(buffer));
 		}
-		this->memo->RemoveLine(this->memo->GetLength()-1);
+		this->memo->RemoveLine(this->memo->GetLength() - 1);
 		fs.close();
 	}
 	this->memo->SetRow(0);
@@ -310,16 +267,62 @@ void OtherNoteForm::Load() {
 void OtherNoteForm::Save() {
 	fstream fs("aha.txt", ios::out | ios::trunc);
 	CharacterFaces *characterFaces = CharacterFaces::Instance(0);
-	fs<<characterFaces->GetFontFamily()<<"\r\n"<<characterFaces->GetFontSize()<<"\r\n";
+	fs << characterFaces->GetFontFamily() << "\r\n" << characterFaces->GetFontSize() << "\r\n";
 	Line *line;
 	Long i = 0;
-	while(i < this->memo->GetLength()) {
+	while (i < this->memo->GetLength()) {
 		line = this->memo->GetLine(i);
 		MakeStringVisitor makeStringVisitor;
 		line->Accept(&makeStringVisitor);
-		fs<<makeStringVisitor.GetCompleteString().c_str()<<"\r\n";
+		fs << makeStringVisitor.GetCompleteString().c_str() << "\r\n";
 		i++;
 	}
 	fs.close();
 }
 */
+
+
+void OtherNoteForm::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
+	if(nSBCode == SB_LINERIGHT) {
+		this->hScroll->ScrollNextLine();
+		/*SCROLLINFO  scrinfo;
+		pScrollBar->GetScrollInfo(&scrinfo);
+		scrinfo.nPos += 1;
+		pScrollBar->SetScrollInfo(&scrinfo);
+		CRect rect;
+		this->GetClientRect(&rect);
+		CRect rrect(rect.left, rect.top, rect.right, rect.bottom-20);
+		this->ScrollWindow(-100,0, CRect(0, 0, 5000, rrect.bottom), CRect(200, 0, 400, 400));
+		this->UpdateWindow();*/
+		//CPaintDC dc(this);
+		//CRect rrrect(rect.left-100, rect.top, 3000, rect.bottom-20);
+		//PaintVisitor paintVisitor(&dc, &rrrect);
+	
+		//this->memo->Accept(&paintVisitor);
+
+
+		//CRect rect(0, 0, 500, 500);
+		//this->ScrollWindow(50,0,&rect,&rect);
+	}
+	/*if(nSBCode == SB_THUMBTRACK) {
+		SCROLLINFO  scrinfo;
+		pScrollBar->GetScrollInfo(&scrinfo);
+		scrinfo.nPos += scrinfo.nTrackPos;
+		pScrollBar->SetScrollInfo(&scrinfo);
+	}*/
+
+	if(nSBCode == SB_LINELEFT) {
+		SCROLLINFO  scrinfo;
+		pScrollBar->GetScrollInfo(&scrinfo);
+		scrinfo.nPos -= 1;
+		pScrollBar->SetScrollInfo(&scrinfo);
+	}
+
+	if(nSBCode == SB_THUMBPOSITION) {
+		SCROLLINFO  scrinfo;
+		pScrollBar->GetScrollInfo(&scrinfo);
+		scrinfo.nPos = scrinfo.nTrackPos;
+		pScrollBar->SetScrollInfo(&scrinfo);
+	}
+	//this->UpdateWindow();
+}
