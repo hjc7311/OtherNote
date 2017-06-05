@@ -11,13 +11,17 @@ public:
 	VerticalScroll(OtherNoteForm *otherNoteForm);
 	VerticalScroll(const VerticalScroll& source);
 	virtual ~VerticalScroll();
-
+	VerticalScroll& operator=(const VerticalScroll& source);
+	virtual void UpdateLine();
 	virtual void ScrollNextLine();
 	virtual void ScrollPreviousLine();
 	virtual void ScrollNextPage();
 	virtual void ScrollPreviousPage();
 	virtual void MoveThumb();
-	VerticalScroll& operator=(const VerticalScroll& source);
+	virtual void SetScrollVisible();
+	virtual void SetScrollUnVisible();
+	virtual void ScrollPreviousByCaret();
+	virtual void ScrollNextByCaret();
 };
 
 #endif //_VERTICALSCROLL_H

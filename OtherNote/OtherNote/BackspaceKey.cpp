@@ -24,13 +24,14 @@ BackspaceKey& BackspaceKey::operator=(const BackspaceKey& source) {
 #include "Line.h"
 #include "Caret.h"
 #include "Character.h"
+#include "HorizontalScroll.h"
 
 void BackspaceKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	Memo *memo = this->otherNoteForm->GetMemo();
 	Line *line = memo->GetLine(memo->GetRow());
 
 	Caret *caret = Caret::Instance(this->otherNoteForm);
-
+	
 	if (line->GetLength() != 0 && line->GetColumn() != 0) {
 		caret->MovePreviousCharacter();
 		line->Erase();
@@ -59,5 +60,6 @@ void BackspaceKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 			memo->RemoveLine();
 		}
 	}
+	this->otherNoteForm->GetHorizontalScroll()->UpdateLine();
 	this->otherNoteForm->RedrawWindow();
 }

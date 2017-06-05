@@ -3,6 +3,7 @@
 #define _SCROLL_H
 
 #include "OtherNoteForm.h"
+typedef signed long int Long;
 
 class Scroll {
 public:
@@ -15,14 +16,32 @@ public:
 	virtual void ScrollNextPage() = 0;
 	virtual void ScrollPreviousPage() = 0;
 	virtual void MoveThumb() = 0;
-	//CScrollBar* GetScroll() const;
+	virtual void SetScrollVisible() = 0;
+	virtual void SetScrollUnVisible() = 0;
+	virtual void UpdateLine() = 0;
+	virtual void ScrollPreviousByCaret() = 0;
+	virtual void ScrollNextByCaret() = 0;
+
+	OtherNoteForm* GetOtherNoteForm() const;
+	CScrollBar* GetScrollBar() const;
+	Long GetMaxLineSize() const;
+
 protected:
 	OtherNoteForm *otherNoteForm;
 	CScrollBar *scrollBar;
+	Long maxLineSize;
 };
-//
-//inline CScrollBar* Scroll::GetScroll() const {
-//	return const_cast<CScrollBar*>(this->scrollBar);
-//}
+
+inline OtherNoteForm* Scroll::GetOtherNoteForm() const {
+	return const_cast<OtherNoteForm*>(this->otherNoteForm);
+}
+
+inline CScrollBar* Scroll::GetScrollBar() const {
+	return const_cast<CScrollBar*>(this->scrollBar);
+}
+
+inline Long Scroll::GetMaxLineSize() const {
+	return this->maxLineSize;
+}
 
 #endif //_SCROLL_H

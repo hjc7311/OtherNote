@@ -5,11 +5,13 @@
 Scroll::Scroll(OtherNoteForm *otherNoteForm) {
 	this->otherNoteForm = otherNoteForm;
 	this->scrollBar = new CScrollBar;
+	this->maxLineSize = 0;
 }
 
 Scroll::Scroll(const Scroll& source) {
 	this->otherNoteForm = source.otherNoteForm;
 	this->scrollBar = source.scrollBar;
+	this->maxLineSize = source.maxLineSize;
 }
 
 Scroll::~Scroll() {

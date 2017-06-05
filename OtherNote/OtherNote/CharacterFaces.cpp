@@ -13,7 +13,7 @@ CharacterFaces::CharacterFaces(CDC *dc)
 
 	this->fontFamily = "Tahoma";
 	this->fontStyle = "Normal";
-	this->fontSize = 300;
+	this->fontSize = 1000;
 	
 	CFont font;
 	font.CreatePointFont(this->fontSize, this->fontFamily.c_str(), dc);

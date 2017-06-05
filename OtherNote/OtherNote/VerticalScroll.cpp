@@ -33,6 +33,16 @@ VerticalScroll::~VerticalScroll() {
 
 }
 
+VerticalScroll& VerticalScroll::operator=(const VerticalScroll& source) {
+	//
+	Scroll::operator=(source);
+	return *this;
+}
+
+void VerticalScroll::UpdateLine() {
+
+}
+
 void VerticalScroll::ScrollNextLine() {
 
 }
@@ -53,8 +63,18 @@ void VerticalScroll::MoveThumb() {
 
 }
 
-VerticalScroll& VerticalScroll::operator=(const VerticalScroll& source) {
-	//
-	Scroll::operator=(source);
-	return *this;
+void VerticalScroll::SetScrollVisible() {
+
+}
+
+void VerticalScroll::SetScrollUnVisible() {
+
+}
+
+void VerticalScroll::ScrollPreviousByCaret() {
+
+}
+
+void VerticalScroll::ScrollNextByCaret() {
+
 }

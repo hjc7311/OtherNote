@@ -53,8 +53,8 @@ BOOL OtherNoteForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 }
 
 void OtherNoteForm::OnSize(UINT nType, int cx, int cy) {
-	this->hScroll = new HorizontalScroll(this);
-	this->vScroll = new VerticalScroll(this);
+	this->horizontalScroll = new HorizontalScroll(this);
+	this->verticalScroll = new VerticalScroll(this);
 	//CRect arect;
 	//this->GetClientRect(&arect);
 	//CRect rrect(arect.left, arect.bottom-20, arect.right, arect.bottom);
@@ -103,7 +103,7 @@ void OtherNoteForm::OnPaint() {
 
 	CPaintDC dc(this);
 	SCROLLINFO  scrinfo;
-	this->hScroll->GetScroll()->GetScrollInfo(&scrinfo);
+	this->horizontalScroll->GetScrollBar()->GetScrollInfo(&scrinfo);
 	//
 	//CScrollBar *csb=this->hScroll->GetScroll();
 	//csb->GetScrollBarInfo();
@@ -111,13 +111,19 @@ void OtherNoteForm::OnPaint() {
 	CRect rect;
 	this->GetClientRect(&rect);
 	CharacterFaces *characterFaces = CharacterFaces::Instance(0);
-	Long width = characterFaces->GetCharacterSize(97).GetWidth();
+	/*Long width = characterFaces->GetCharacterSize(97).GetWidth();
+	if (scrinfo.nMax - scrinfo.nPos - scrinfo.nPage < width) {
+		width = scrinfo.nMax - scrinfo.nPos - scrinfo.nPage;
+		scrinfo.nPos += width;
+	}
+	this->horizontalScroll->GetScrollBar()->SetScrollInfo(&scrinfo);*/
 	//CRect rrect(-100*(scrinfo.nPos), 0 ,5000, rect.bottom-20);
 	//this->GetClientRect(&rect);
-	CRect rrect(-((scrinfo.nPos)*width), rect.top, 5000, rect.bottom - 20);
-	PaintVisitor paintVisitor(&dc, &rrect);
-
-	this->memo->Accept(&paintVisitor);
+	//CRect rrect(-((scrinfo.nPos)*width), rect.top, 5000, rect.bottom - 20);
+	CRect rrect(-(scrinfo.nPos), rect.top, 5000, rect.bottom - 20);
+	PaintVisitor paintVisitor(&dc, &rrect);	
+	this->horizontalScroll->UpdateLine();
+		this->memo->Accept(&paintVisitor);
 }
 
 //void OtherNoteForm::OnPaint() {
@@ -139,6 +145,9 @@ void OtherNoteForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
 		Caret *caret = Caret::Instance(this);
 		caret->MoveNextCharacter();
 
+		CRect rect;
+		this->GetClientRect(&rect);
+		this->horizontalScroll->UpdateLine();
 	}
 	this->RedrawWindow();
 
@@ -284,7 +293,7 @@ void OtherNoteForm::Save() {
 
 void OtherNoteForm::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
 	if(nSBCode == SB_LINERIGHT) {
-		this->hScroll->ScrollNextLine();
+		this->horizontalScroll->ScrollNextLine();
 		/*SCROLLINFO  scrinfo;
 		pScrollBar->GetScrollInfo(&scrinfo);
 		scrinfo.nPos += 1;
@@ -312,17 +321,67 @@ void OtherNoteForm::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
 	}*/
 
 	if(nSBCode == SB_LINELEFT) {
+		/*SCROLLINFO  scrinfo;
+		pScrollBar->GetScrollInfo(&scrinfo);
+		scrinfo.nPos -= 1;
+		pScrollBar->SetScrollInfo(&scrinfo);*/
+		this->horizontalScroll->ScrollPreviousLine();
+	}
+
+	if (nSBCode == SB_PAGERIGHT) {
+		this->horizontalScroll->ScrollNextPage();
+	}
+
+	if (nSBCode == SB_PAGELEFT) {
+		this->horizontalScroll->ScrollPreviousPage();
+	}
+
+	if (nSBCode == SB_THUMBTRACK) {
+		this->horizontalScroll->MoveThumb();
+	}
+
+	if (nSBCode == SB_THUMBPOSITION) {
+		this->horizontalScroll->MoveThumb();
+	}
+	
+	//this->UpdateWindow();
+}
+
+void OtherNoteForm::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
+	if (nSBCode == SB_LINEDOWN) {
+		this->verticalScroll->ScrollNextLine();
+		/*SCROLLINFO  scrinfo;
+		pScrollBar->GetScrollInfo(&scrinfo);
+		scrinfo.nPos += 1;
+		pScrollBar->SetScrollInfo(&scrinfo);
+		CRect rect;
+		this->GetClientRect(&rect);
+		CRect rrect(rect.left, rect.top, rect.right, rect.bottom-20);
+		this->ScrollWindow(-100,0, CRect(0, 0, 5000, rrect.bottom), CRect(200, 0, 400, 400));
+		this->UpdateWindow();*/
+		//CPaintDC dc(this);
+		//CRect rrrect(rect.left-100, rect.top, 3000, rect.bottom-20);
+		//PaintVisitor paintVisitor(&dc, &rrrect);
+
+		//this->memo->Accept(&paintVisitor);
+		
+
+		//CRect rect(0, 0, 500, 500);
+		//this->ScrollWindow(50,0,&rect,&rect);
+	}
+	/*if(nSBCode == SB_THUMBTRACK) {
+	SCROLLINFO  scrinfo;
+	pScrollBar->GetScrollInfo(&scrinfo);
+	scrinfo.nPos += scrinfo.nTrackPos;
+	pScrollBar->SetScrollInfo(&scrinfo);
+	}*/
+
+	if (nSBCode == SB_LINEUP) {
 		SCROLLINFO  scrinfo;
 		pScrollBar->GetScrollInfo(&scrinfo);
 		scrinfo.nPos -= 1;
 		pScrollBar->SetScrollInfo(&scrinfo);
 	}
 
-	if(nSBCode == SB_THUMBPOSITION) {
-		SCROLLINFO  scrinfo;
-		pScrollBar->GetScrollInfo(&scrinfo);
-		scrinfo.nPos = scrinfo.nTrackPos;
-		pScrollBar->SetScrollInfo(&scrinfo);
-	}
 	//this->UpdateWindow();
 }

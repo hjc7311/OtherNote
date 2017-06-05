@@ -12,17 +12,16 @@ public:
 	HorizontalScroll(const HorizontalScroll& source);
 	virtual ~HorizontalScroll();
 	HorizontalScroll& operator=(const HorizontalScroll& source);
+	virtual void UpdateLine();
 	virtual void ScrollNextLine();
 	virtual void ScrollPreviousLine();
 	virtual void ScrollNextPage();
 	virtual void ScrollPreviousPage();
 	virtual void MoveThumb();
-	CScrollBar* GetScroll() const;
+	virtual void SetScrollVisible();
+	virtual void SetScrollUnVisible();
+	virtual void ScrollNextByCaret();
+	virtual void ScrollPreviousByCaret();
 };
-
-inline CScrollBar* HorizontalScroll::GetScroll() const {
-	return const_cast<CScrollBar*>(this->scrollBar);
-	//return Scroll::GetScroll();
-}
 
 #endif //_HORIZONTALSCROLL_H
