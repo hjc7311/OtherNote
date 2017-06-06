@@ -68,6 +68,9 @@ void HorizontalScroll::UpdateLine() {
 		scrinfo.nPage = rect.right - 20;
 		this->scrollBar->SetScrollInfo(&scrinfo);
 	}
+	else {
+		this->SetScrollUnVisible();
+	}
 }
 
 void HorizontalScroll::ScrollNextLine() {
@@ -166,17 +169,26 @@ void HorizontalScroll::MoveThumb() {
 	this->otherNoteForm->UpdateWindow();
 }
 
-void HorizontalScroll::SetScrollVisible() {
-	this->scrollBar->EnableScrollBar(ESB_ENABLE_BOTH);
+void HorizontalScroll::ScrollNext(Long size) {
+	SCROLLINFO  scrinfo;
+	this->scrollBar->GetScrollInfo(&scrinfo);
+
+	if ((scrinfo.nPos + scrinfo.nPage) < scrinfo.nMax) {
+		scrinfo.nPos += size;
+		if (scrinfo.nPos + scrinfo.nPage > scrinfo.nMax) {
+			scrinfo.nPos -= size;
+			size -= scrinfo.nPos + scrinfo.nPage - scrinfo.nMax + size;
+			scrinfo.nPos += size;
+		}
+		this->scrollBar->SetScrollInfo(&scrinfo);
+		CRect rect;
+		this->otherNoteForm->GetClientRect(&rect);
+		this->otherNoteForm->ScrollWindow(-size, 0, CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20), CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20));
+		this->otherNoteForm->UpdateWindow();
+	}
 }
 
-void HorizontalScroll::SetScrollUnVisible() {
-	this->scrollBar->EnableScrollBar(ESB_DISABLE_BOTH);
-}
+void HorizontalScroll::ScrollPrevious(Long size) {
 
-void HorizontalScroll::ScrollNextByCaret() {
-}
-
-void HorizontalScroll::ScrollPreviousByCaret() {
 }
 

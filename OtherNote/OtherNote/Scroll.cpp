@@ -28,3 +28,11 @@ Scroll& Scroll::operator=(const Scroll& source) {
 	this->otherNoteForm = source.otherNoteForm;
 	return *this;
 }
+
+void Scroll::SetScrollVisible() {
+	this->scrollBar->EnableScrollBar(ESB_ENABLE_BOTH);
+}
+
+void Scroll::SetScrollUnVisible() {
+	this->scrollBar->EnableScrollBar(ESB_DISABLE_BOTH);
+}

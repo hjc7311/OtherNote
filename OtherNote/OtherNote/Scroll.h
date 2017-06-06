@@ -16,11 +16,11 @@ public:
 	virtual void ScrollNextPage() = 0;
 	virtual void ScrollPreviousPage() = 0;
 	virtual void MoveThumb() = 0;
-	virtual void SetScrollVisible() = 0;
-	virtual void SetScrollUnVisible() = 0;
+	virtual void SetScrollVisible();
+	virtual void SetScrollUnVisible();
 	virtual void UpdateLine() = 0;
-	virtual void ScrollPreviousByCaret() = 0;
-	virtual void ScrollNextByCaret() = 0;
+	virtual void ScrollPrevious(Long size) = 0;
+	virtual void ScrollNext(Long size) = 0;
 
 	OtherNoteForm* GetOtherNoteForm() const;
 	CScrollBar* GetScrollBar() const;

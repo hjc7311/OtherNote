@@ -18,10 +18,8 @@ public:
 	virtual void ScrollNextPage();
 	virtual void ScrollPreviousPage();
 	virtual void MoveThumb();
-	virtual void SetScrollVisible();
-	virtual void SetScrollUnVisible();
-	virtual void ScrollNextByCaret();
-	virtual void ScrollPreviousByCaret();
+	virtual void ScrollNext(Long size);
+	virtual void ScrollPrevious(Long size);
 };
 
 #endif //_HORIZONTALSCROLL_H
