@@ -189,6 +189,22 @@ void HorizontalScroll::ScrollNext(Long size) {
 }
 
 void HorizontalScroll::ScrollPrevious(Long size) {
+	SCROLLINFO  scrinfo;
+	this->scrollBar->GetScrollInfo(&scrinfo);
 
+	if (scrinfo.nPos > 0) {
+		CharacterFaces *characterFaces = CharacterFaces::Instance(0);
+		scrinfo.nPos -= size;
+		if (scrinfo.nPos < 0) {
+			scrinfo.nPos += size;
+			size = scrinfo.nPos;
+			scrinfo.nPos = 0;
+		}
+		this->scrollBar->SetScrollInfo(&scrinfo);
+		CRect rect;
+		this->otherNoteForm->GetClientRect(&rect);
+		this->otherNoteForm->ScrollWindow(+size, 0, CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20), CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20));
+		this->otherNoteForm->UpdateWindow();
+	}
 }
 

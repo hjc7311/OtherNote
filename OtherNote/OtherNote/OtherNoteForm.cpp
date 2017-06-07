@@ -122,7 +122,7 @@ void OtherNoteForm::OnPaint() {
 	//CRect rrect(-100*(scrinfo.nPos), 0 ,5000, rect.bottom-20);
 	//this->GetClientRect(&rect);
 	//CRect rrect(-((scrinfo.nPos)*width), rect.top, 5000, rect.bottom - 20);
-	CRect rrect(-(scrinfo.nPos), -(vScrinfo.nPos), 5000, 5000);
+	CRect rrect(-(scrinfo.nPos), -(vScrinfo.nPos), 10000, 10000);
 	PaintVisitor paintVisitor(&dc, &rrect);	
 	
 	this->verticalScroll->UpdateLine();
@@ -153,11 +153,55 @@ void OtherNoteForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
 		Long moveWidth = character->GetWidth();
 		this->horizontalScroll->ScrollNext(moveWidth);*/
 		
-		/*if (line->GetLength() == line->GetColumn()) {
-			Long width = line->GetCharacter(line->GetColumn() - 1)->GetWidth();
-			this->horizontalScroll->ScrollNext(width);
+		//if (line->GetLength() == line->GetColumn()) {
+		this->horizontalScroll->UpdateLine();
+		
+		Long lineWidth = 0;
+		Long i = 0;
+		CRect rect;
+		this->GetClientRect(&rect);
+		while (i < line->GetLength()) {
+			lineWidth += line->GetCharacter(i)->GetWidth();
+			i++;
 		}
-		else {
+		Long currentLineWidth = 0;
+		i = 0;
+		while (i < line->GetColumn()) {
+			currentLineWidth += line->GetCharacter(i)->GetWidth();
+			i++;
+		}
+		SCROLLINFO scrinfo;
+		this->horizontalScroll->GetScrollBar()->GetScrollInfo(&scrinfo);
+
+		if (currentLineWidth >= this->horizontalScroll->GetMaxLineSize()) {
+			Long width = line->GetCharacter(line->GetColumn() - 1)->GetWidth();
+			//if (scrinfo.nPos + scrinfo.nPage > currentLineWidth) {
+				this->horizontalScroll->ScrollNext(width);
+			//}
+		}
+		else if (currentLineWidth > scrinfo.nPos + scrinfo.nPage){
+			CRect rect;
+			this->GetClientRect(&rect);
+			Long width = rect.right / 3;
+			if ((this->horizontalScroll->GetMaxLineSize() - currentLineWidth) < width) {
+				width = this->horizontalScroll->GetMaxLineSize() - currentLineWidth;
+			}
+
+			/*lineWidth = 0;
+			while (i < line->GetColumn()) {
+				lineWidth += line->GetCharacter(i)->GetWidth();
+				i++;
+			}*/
+			/*SCROLLINFO scrinfo;
+			this->horizontalScroll->GetScrollBar()->GetScrollInfo(&scrinfo);*/
+
+			//if (scrinfo.nPos + scrinfo.nPage > lineWidth) {
+			this->horizontalScroll->ScrollNext(width);
+			//}			
+		}
+		//this->horizontalScroll->UpdateLine();
+		//}
+		/*else {
 			Long i = 0;
 			Long size = 0;
 			while (i < line->GetColumn() - 1) {
@@ -173,7 +217,7 @@ void OtherNoteForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
 				this->horizontalScroll->ScrollNext(width);
 			}
 		}*/
-		this->horizontalScroll->UpdateLine();
+		//this->horizontalScroll->UpdateLine();
 		Caret *caret = Caret::Instance(this);
 		caret->MoveNextCharacter();
 	}
