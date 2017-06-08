@@ -10,6 +10,9 @@
 #include "HorizontalScroll.h"
 #include "VerticalScroll.h"
 #include "Caret.h"
+#include "HScrollActionCreator.h"
+#include "VScrollActionCreator.h"
+#include "ScrollAction.h"
 #include <WinUser.h>
 #include <fstream>
 using namespace std;
@@ -55,25 +58,6 @@ BOOL OtherNoteForm::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 void OtherNoteForm::OnSize(UINT nType, int cx, int cy) {
 	this->horizontalScroll = new HorizontalScroll(this);
 	this->verticalScroll = new VerticalScroll(this);
-	//CRect arect;
-	//this->GetClientRect(&arect);
-	//CRect rrect(arect.left, arect.bottom-20, arect.right, arect.bottom);
-	//scroll->Create(SBS_HORZ, rrect, this, 1);
-	////scroll->SetScrollRange(0, 100);
-	////scroll->SetScrollPos(0);
-	//SCROLLINFO  scrinfo; 
-	//scrinfo.cbSize = sizeof(scrinfo); 
-	//scrinfo.fMask = SIF_ALL; 
-	//scrinfo.nMin = 0;          // 최소값
-	//scrinfo.nMax = 100;      // 최대값 
-	//scrinfo.nPage = 50;      // 페이지단위 증가값 
-	//scrinfo.nTrackPos = 50;  // 트랙바가 움직일때의 위치값 
-	//scrinfo.nPos = 0;        // 위치 
-	//scroll->SetScrollInfo(&scrinfo); 
-	//scroll->ShowScrollBar(SB_BOTH);
-	/*this->dc = new CDC;
-	this->dc->CreateDCA("test", NULL, NULL, NULL);
-	this->dc->CreateCompatibleDC(this->dc);*/
 }
 
 void OtherNoteForm::OnClose() {
@@ -113,19 +97,8 @@ void OtherNoteForm::OnPaint() {
 	CRect rect;
 	this->GetClientRect(&rect);
 	CharacterFaces *characterFaces = CharacterFaces::Instance(0);
-	/*Long width = characterFaces->GetCharacterSize(97).GetWidth();
-	if (scrinfo.nMax - scrinfo.nPos - scrinfo.nPage < width) {
-		width = scrinfo.nMax - scrinfo.nPos - scrinfo.nPage;
-		scrinfo.nPos += width;
-	}
-	this->horizontalScroll->GetScrollBar()->SetScrollInfo(&scrinfo);*/
-	//CRect rrect(-100*(scrinfo.nPos), 0 ,5000, rect.bottom-20);
-	//this->GetClientRect(&rect);
-	//CRect rrect(-((scrinfo.nPos)*width), rect.top, 5000, rect.bottom - 20);
 	CRect rrect(-(scrinfo.nPos), -(vScrinfo.nPos), 10000, 10000);
 	PaintVisitor paintVisitor(&dc, &rrect);	
-	
-	this->verticalScroll->UpdateLine();
 	this->memo->Accept(&paintVisitor);
 }
 
@@ -144,85 +117,12 @@ void OtherNoteForm::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	if (nChar >= 32 && nChar <= 126) {
 		Line *line = this->memo->GetLine(this->memo->GetRow());
 		line->Write(nChar);
-
-		//Memo *memo = this->otherNoteForm->GetMemo();
-		//Line *line = memo->GetLine(memo->GetRow());
-		
-		//라인끝에서 한글자 추가를 할 경우 움직인 클자의 width만큼 이동할 수 있도록 함
-		/*Character *character = line->GetCharacter(line->GetColumn() - 1);
-		Long moveWidth = character->GetWidth();
-		this->horizontalScroll->ScrollNext(moveWidth);*/
-		
-		//if (line->GetLength() == line->GetColumn()) {
 		this->horizontalScroll->UpdateLine();
-		
-		Long lineWidth = 0;
-		Long i = 0;
-		CRect rect;
-		this->GetClientRect(&rect);
-		while (i < line->GetLength()) {
-			lineWidth += line->GetCharacter(i)->GetWidth();
-			i++;
-		}
-		Long currentLineWidth = 0;
-		i = 0;
-		while (i < line->GetColumn()) {
-			currentLineWidth += line->GetCharacter(i)->GetWidth();
-			i++;
-		}
-		SCROLLINFO scrinfo;
-		this->horizontalScroll->GetScrollBar()->GetScrollInfo(&scrinfo);
-
-		if (currentLineWidth >= this->horizontalScroll->GetMaxLineSize()) {
-			Long width = line->GetCharacter(line->GetColumn() - 1)->GetWidth();
-			//if (scrinfo.nPos + scrinfo.nPage > currentLineWidth) {
-				this->horizontalScroll->ScrollNext(width);
-			//}
-		}
-		else if (currentLineWidth > scrinfo.nPos + scrinfo.nPage){
-			CRect rect;
-			this->GetClientRect(&rect);
-			Long width = rect.right / 3;
-			if ((this->horizontalScroll->GetMaxLineSize() - currentLineWidth) < width) {
-				width = this->horizontalScroll->GetMaxLineSize() - currentLineWidth;
-			}
-
-			/*lineWidth = 0;
-			while (i < line->GetColumn()) {
-				lineWidth += line->GetCharacter(i)->GetWidth();
-				i++;
-			}*/
-			/*SCROLLINFO scrinfo;
-			this->horizontalScroll->GetScrollBar()->GetScrollInfo(&scrinfo);*/
-
-			//if (scrinfo.nPos + scrinfo.nPage > lineWidth) {
-			this->horizontalScroll->ScrollNext(width);
-			//}			
-		}
-		//this->horizontalScroll->UpdateLine();
-		//}
-		/*else {
-			Long i = 0;
-			Long size = 0;
-			while (i < line->GetColumn() - 1) {
-				size += line->GetCharacter(i)->GetWidth();
-				i++;
-			}
-			SCROLLINFO scrinfo;
-			this->horizontalScroll->GetScrollBar()->GetScrollInfo(&scrinfo);
-			if (scrinfo.nPos + scrinfo.nPage > size) {
-				CRect rect;
-				this->GetClientRect(&rect);
-				Long width = rect.right / 3;
-				this->horizontalScroll->ScrollNext(width);
-			}
-		}*/
-		//this->horizontalScroll->UpdateLine();
+		this->horizontalScroll->ScrollNextCharacter();
 		Caret *caret = Caret::Instance(this);
 		caret->MoveNextCharacter();
 	}
 	this->RedrawWindow();
-
 }
 
 LRESULT OtherNoteForm::OnImeComposition(WPARAM wParam, LPARAM lParam) {
@@ -364,80 +264,19 @@ void OtherNoteForm::Save() {
 
 
 void OtherNoteForm::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
-	if(nSBCode == SB_LINERIGHT) {
-		this->horizontalScroll->ScrollNextLine();
-		/*SCROLLINFO  scrinfo;
-		pScrollBar->GetScrollInfo(&scrinfo);
-		scrinfo.nPos += 1;
-		pScrollBar->SetScrollInfo(&scrinfo);
-		CRect rect;
-		this->GetClientRect(&rect);
-		CRect rrect(rect.left, rect.top, rect.right, rect.bottom-20);
-		this->ScrollWindow(-100,0, CRect(0, 0, 5000, rrect.bottom), CRect(200, 0, 400, 400));
-		this->UpdateWindow();*/
-		//CPaintDC dc(this);
-		//CRect rrrect(rect.left-100, rect.top, 3000, rect.bottom-20);
-		//PaintVisitor paintVisitor(&dc, &rrrect);
-		//this->memo->Accept(&paintVisitor);
-		//CRect rect(0, 0, 500, 500);
-		//this->ScrollWindow(50,0,&rect,&rect);
-	}
+	HScrollActionCreator hScrollActionCreator;
+	ScrollAction *scrollAction = hScrollActionCreator.Create(this->horizontalScroll, nSBCode, nPos, pScrollBar);
 
-	if(nSBCode == SB_LINELEFT) {
-		/*SCROLLINFO  scrinfo;
-		pScrollBar->GetScrollInfo(&scrinfo);
-		scrinfo.nPos -= 1;
-		pScrollBar->SetScrollInfo(&scrinfo);*/
-		this->horizontalScroll->ScrollPreviousLine();
+	if(scrollAction != 0) {
+		scrollAction->Action(nSBCode, nPos, pScrollBar);
 	}
-
-	if (nSBCode == SB_PAGERIGHT) {
-		this->horizontalScroll->ScrollNextPage();
-	}
-
-	if (nSBCode == SB_PAGELEFT) {
-		this->horizontalScroll->ScrollPreviousPage();
-	}
-
-	if (nSBCode == SB_THUMBTRACK) {
-		/*SCROLLINFO  scrinfo;
-		pScrollBar->GetScrollInfo(&scrinfo);
-		scrinfo.nPos += scrinfo.nTrackPos;
-		pScrollBar->SetScrollInfo(&scrinfo);*/
-		this->horizontalScroll->MoveThumb();
-	}
-
-	if (nSBCode == SB_THUMBPOSITION) {
-		this->horizontalScroll->MoveThumb();
-	}
-	
-	//this->UpdateWindow();
 }
 
 void OtherNoteForm::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) {
-	if (nSBCode == SB_LINEDOWN) {
-		this->verticalScroll->ScrollNextLine();
+	VScrollActionCreator vScrollActionCreator;
+	ScrollAction *scrollAction = vScrollActionCreator.Create(this->verticalScroll, nSBCode, nPos, pScrollBar);
+	
+	if(scrollAction != 0) {
+		scrollAction->Action(nSBCode, nPos, pScrollBar);
 	}
-
-	if (nSBCode == SB_LINEUP) {
-		this->verticalScroll->ScrollPreviousLine();
-	}
-
-	if (nSBCode == SB_PAGEDOWN) {
-		this->verticalScroll->ScrollNextPage();
-	}
-
-	if (nSBCode == SB_PAGEUP) {
-		this->verticalScroll->ScrollPreviousPage();
-	}
-
-	if (nSBCode == SB_THUMBPOSITION) {
-		this->verticalScroll->MoveThumb();
-	}
-
-	if (nSBCode == SB_THUMBTRACK) {
-		this->verticalScroll->MoveThumb();
-	}
-
-	//this->UpdateWindow();
 }

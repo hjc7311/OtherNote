@@ -27,10 +27,12 @@ ReturnKey& ReturnKey::operator=(const ReturnKey& source) {
 #include "Memo.h"
 #include "Line.h"
 #include "Character.h"
+#include "VerticalScroll.h"
+#include "CharacterFaces.h"
 void ReturnKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	Memo *memo = this->otherNoteForm->GetMemo();
 	Line *line = memo->GetLine(memo->GetRow());
-
+		
 	memo->InsertLine();
 	Line *newLine = memo->GetLine(memo->GetRow());
 
@@ -45,4 +47,9 @@ void ReturnKey::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 	
 	Caret *caret = Caret::Instance(this->otherNoteForm);
 	caret->MoveNextLine();
+
+	this->otherNoteForm->GetVerticalScroll()->UpdateLine();
+	CharacterFaces *characterFaces = CharacterFaces::Instance(0);
+	Long size = characterFaces->GetCharacterSize(97).GetHeight();
+	this->otherNoteForm->GetVerticalScroll()->ScrollNext(size);
 }

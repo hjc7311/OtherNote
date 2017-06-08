@@ -5,6 +5,7 @@
 
 #include "Scroll.h"
 #include "OtherNoteForm.h"
+#include "Line.h"
 
 class HorizontalScroll : public Scroll {
 public:
@@ -20,6 +21,8 @@ public:
 	virtual void MoveThumb();
 	virtual void ScrollNext(Long size);
 	virtual void ScrollPrevious(Long size);
+	virtual void ScrollNextCharacter();
+	virtual void ScrollPreviousCharacter();
 };
 
 #endif //_HORIZONTALSCROLL_H

@@ -193,7 +193,6 @@ void HorizontalScroll::ScrollPrevious(Long size) {
 	this->scrollBar->GetScrollInfo(&scrinfo);
 
 	if (scrinfo.nPos > 0) {
-		CharacterFaces *characterFaces = CharacterFaces::Instance(0);
 		scrinfo.nPos -= size;
 		if (scrinfo.nPos < 0) {
 			scrinfo.nPos += size;
@@ -203,8 +202,90 @@ void HorizontalScroll::ScrollPrevious(Long size) {
 		this->scrollBar->SetScrollInfo(&scrinfo);
 		CRect rect;
 		this->otherNoteForm->GetClientRect(&rect);
-		this->otherNoteForm->ScrollWindow(+size, 0, CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20), CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20));
+		this->otherNoteForm->ScrollWindow(size, 0, CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20), CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20));
 		this->otherNoteForm->UpdateWindow();
 	}
+}
+
+void HorizontalScroll::ScrollNextCharacter() {
+	Line *line = this->otherNoteForm->GetMemo()->GetLine(this->otherNoteForm->GetMemo()->GetRow());
+	
+	Long currentLineWidth = 0;
+	Long i = 0;
+	while (i < line->GetColumn()) {
+		currentLineWidth += line->GetCharacter(i)->GetWidth();
+		i++;
+	}
+	SCROLLINFO scrinfo;
+	this->GetScrollBar()->GetScrollInfo(&scrinfo);
+		
+	//현재까지의 글자들의넓이들과 라인 최대 글자들의 넓이와 같은 경우
+	Long width = 0;
+	if (currentLineWidth >= this->GetMaxLineSize()) {
+		width = line->GetCharacter(line->GetColumn() - 1)->GetWidth();
+		//this->ScrollNext(width);
+
+	}
+	else if (currentLineWidth > scrinfo.nPos + scrinfo.nPage) {//현재까지ㅡ이 글자들의 넓이들이 큰 경우
+		CRect rect;
+		this->otherNoteForm->GetClientRect(&rect);
+		width = rect.right / 3;
+		if ((this->GetMaxLineSize() - currentLineWidth) < width) {
+			width = this->GetMaxLineSize() - currentLineWidth;
+		}
+		//this->ScrollNext(width);			
+	}
+	
+	if ((scrinfo.nPos + scrinfo.nPage) < scrinfo.nMax) {
+		scrinfo.nPos += width;
+		if (scrinfo.nPos + scrinfo.nPage > scrinfo.nMax) {
+			scrinfo.nPos -= width;
+			width -= scrinfo.nPos + scrinfo.nPage - scrinfo.nMax + width;
+			scrinfo.nPos += width;
+		}
+		this->scrollBar->SetScrollInfo(&scrinfo);
+		CRect rect;
+		this->otherNoteForm->GetClientRect(&rect);
+		this->otherNoteForm->ScrollWindow(-width, 0, CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20), CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20));
+		this->otherNoteForm->UpdateWindow();
+	}
+}
+
+void HorizontalScroll::ScrollPreviousCharacter() {
+	Line *line = this->otherNoteForm->GetMemo()->GetLine(this->otherNoteForm->GetMemo()->GetRow());
+	
+	SCROLLINFO  scrinfo;
+	this->scrollBar->GetScrollInfo(&scrinfo);
+	
+	Long width = 0;
+	Long currentLineWidth = 0;
+	Long i = 0;
+	while (i < line->GetColumn()) {
+		currentLineWidth += line->GetCharacter(i)->GetWidth();
+		i++;
+	}
+	if (currentLineWidth < scrinfo.nPos) {
+		CRect rect;
+		this->otherNoteForm->GetClientRect(&rect);
+		width = rect.right-20 / 3;
+		if (currentLineWidth < width) {
+			width =currentLineWidth;
+		}
+		scrinfo.nPos -= width;
+	}
+	
+	/*if (scrinfo.nPos > 0) {
+		scrinfo.nPos -= width;
+		if (scrinfo.nPos < 0) {
+			scrinfo.nPos += width;
+			width = scrinfo.nPos;
+			scrinfo.nPos = 0;
+		}*/
+		this->scrollBar->SetScrollInfo(&scrinfo);
+		CRect rect;
+		this->otherNoteForm->GetClientRect(&rect);
+		this->otherNoteForm->ScrollWindow(width, 0, CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20), CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20));
+		this->otherNoteForm->UpdateWindow();
+	//}
 }
 

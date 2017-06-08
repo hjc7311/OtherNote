@@ -21,6 +21,8 @@ public:
 	virtual void UpdateLine() = 0;
 	virtual void ScrollPrevious(Long size) = 0;
 	virtual void ScrollNext(Long size) = 0;
+	virtual void ScrollNextCharacter() = 0;
+	virtual void ScrollPreviousCharacter() = 0;
 
 	OtherNoteForm* GetOtherNoteForm() const;
 	CScrollBar* GetScrollBar() const;

@@ -20,6 +20,8 @@ public:
 	virtual void MoveThumb();
 	virtual void ScrollPrevious(Long size);
 	virtual void ScrollNext(Long size);
+	virtual void ScrollNextCharacter();
+	virtual void ScrollPreviousCharacter();
 };
 
 #endif //_VERTICALSCROLL_H

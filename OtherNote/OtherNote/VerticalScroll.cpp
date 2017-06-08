@@ -57,10 +57,10 @@ void VerticalScroll::UpdateLine() {
 
 	CRect rect;
 	this->otherNoteForm->GetClientRect(&rect);
-	if (this->GetMaxLineSize() > rect.bottom - 20) {
+	if (this->maxLineSize > rect.bottom - 20) {
 		SCROLLINFO scrinfo;
 		this->scrollBar->GetScrollInfo(&scrinfo);
-		scrinfo.nMax = this->maxLineSize;
+		scrinfo.nMax = this->maxLineSize;//scrinfo.nPos + scrinfo.nPage + height;//this->maxLineSize;
 		scrinfo.nPage = rect.bottom - 20;
 		this->scrollBar->SetScrollInfo(&scrinfo);
 	}
@@ -165,10 +165,53 @@ void VerticalScroll::MoveThumb() {
 	this->otherNoteForm->UpdateWindow();
 }
 
-void VerticalScroll::ScrollPrevious(Long size) {
+void VerticalScroll::ScrollNext(Long size) {
+	SCROLLINFO  scrinfo;
+	this->scrollBar->GetScrollInfo(&scrinfo);
 
+	if ((scrinfo.nPos + scrinfo.nPage) < scrinfo.nMax) {
+		/*CharacterFaces *characterFaces = CharacterFaces::Instance(0);
+		size = characterFaces->GetCharacterSize(97).GetHeight();
+		scrinfo.nPos += size;
+		if (scrinfo.nPos + scrinfo.nPage > scrinfo.nMax) {
+			scrinfo.nPos -= size;
+			size -= scrinfo.nPos + scrinfo.nPage - scrinfo.nMax + size;
+			scrinfo.nPos += size;
+		}*/
+				
+		scrinfo.nPos += size;
+		this->scrollBar->SetScrollInfo(&scrinfo);
+		CRect rect;
+		this->otherNoteForm->GetClientRect(&rect);
+		this->otherNoteForm->ScrollWindow(0, -size, CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20), CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20));
+		this->otherNoteForm->UpdateWindow();
+	}
 }
 
-void VerticalScroll::ScrollNext(Long size) {
+void VerticalScroll::ScrollPrevious(Long size) {
+	SCROLLINFO  scrinfo;
+	this->scrollBar->GetScrollInfo(&scrinfo);
 
+	if (scrinfo.nPos > 0) {
+		//CharacterFaces *characterFaces = CharacterFaces::Instance(0);
+		//Long height = characterFaces->GetCharacterSize(97).GetHeight();
+		//scrinfo.nPos -= height;
+		//if (scrinfo.nPos < 0) {
+		//	scrinfo.nPos += height;
+		//	height = scrinfo.nPos;
+		//	scrinfo.nPos -= height;//=0
+		//}
+		scrinfo.nPos -= size;
+		this->scrollBar->SetScrollInfo(&scrinfo);
+		CRect rect;
+		this->otherNoteForm->GetClientRect(&rect);
+		this->otherNoteForm->ScrollWindow(0, size, CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20), CRect(rect.left, rect.top, rect.right - 20, rect.bottom - 20));
+		this->otherNoteForm->UpdateWindow();
+	}
+}
+
+void VerticalScroll::ScrollNextCharacter() {
+}
+
+void VerticalScroll::ScrollPreviousCharacter() {
 }
